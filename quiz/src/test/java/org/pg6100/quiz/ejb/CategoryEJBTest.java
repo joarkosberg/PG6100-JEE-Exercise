@@ -22,7 +22,6 @@ public class CategoryEJBTest {
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackages(true, "org.pg6100.quiz")
-                .addPackages(true, "org.apache.commons.codec")
                 .addAsResource("META-INF/persistence.xml");
     }
 
@@ -87,8 +86,19 @@ public class CategoryEJBTest {
                 anyMatch(c -> subSubCategory4.equals(c.getName())));
     }
 
+    @Test
+    public void testCreateTwoCategoriesWithSameName(){
+        int size = categoryEJB.getAllCategories().size();
+        String category1 = categoryEJB.createNewCategory("NoWork");
+        String category2 = categoryEJB.createNewCategory("NoWork");
+
+        assertEquals(size + 1, categoryEJB.getAllCategories().size());
+        assertNotNull(category1);
+        assertNull(category2);
+    }
+
     @Test(expected = EJBException.class)
     public void testCreationOfSubWithoutValidCategory(){
-        categoryEJB.createNewSubCategory("NotSuchValid", "ThisNoWork");
+        categoryEJB.createNewSubCategory("NotSuchValid", "ThisDoNotWork");
     }
 }

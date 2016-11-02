@@ -21,6 +21,9 @@ public class CategoryEJB {
     Category
      */
     public String createNewCategory(@NotNull String name){
+        if(em.find(Category.class, name) != null)
+            return null;
+
         Category category = new Category();
         category.setName(name);
         em.persist(category);

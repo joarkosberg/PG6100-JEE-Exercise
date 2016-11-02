@@ -241,19 +241,6 @@
                     </executions>
                 </plugin>
 
-                <!--
-                  Avoid failing War generation if web.xml is missing, as we ll not
-                  use it in some example modules
-              -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <configuration>
-                        <failOnMissingWebXml>false</failOnMissingWebXml>
-                    </configuration>
-                </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
@@ -269,7 +256,6 @@
                         </execution>
                     </executions>
                 </plugin>
-
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -297,13 +283,12 @@
                     </executions>
                 </plugin>
 
-
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>1.1.0.Alpha11</version>
                     <configuration>
-                        <!--<jbossHome>${jbossHome}</jbossHome>-->
+                        <jbossHome>${jbossHome}</jbossHome>
                         <add-user>
                             <users>
                                 <user>
@@ -313,8 +298,7 @@
                             </users>
                         </add-user>
                         <java-opts>
-                            <!-- comment out if need to attach a remote debugger -->
-                            <!--<javaOpt>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</javaOpt>-->
+                            <javaOpt>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</javaOpt>
                         </java-opts>
                     </configuration>
                     <executions>
@@ -332,6 +316,40 @@
                             <goals>
                                 <goal>undeploy</goal>
                                 <goal>shutdown</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.7.201606060606</version>
+                    <executions>
+                        <execution>
+                            <id>default-prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-report</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-prepare-agent-integration</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>prepare-agent-integration</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-report-integration</id>
+                            <goals>
+                                <goal>report-integration</goal>
                             </goals>
                         </execution>
                     </executions>

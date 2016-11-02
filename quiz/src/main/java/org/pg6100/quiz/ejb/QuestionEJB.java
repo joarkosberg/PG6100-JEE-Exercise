@@ -18,6 +18,10 @@ public class QuestionEJB {
 
     public Long createQuestion(String subSubCategoryName, @NotNull String questionText,
                                List<String> answers, int correctAnswer){
+        if(answers.size() != 4 || correctAnswer > 3){
+            return null;
+        }
+
         SubSubCategory subSubCategory = em.find(SubSubCategory.class, subSubCategoryName);
 
         Question question = new Question();
