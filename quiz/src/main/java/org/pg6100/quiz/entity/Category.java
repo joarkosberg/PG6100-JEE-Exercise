@@ -7,18 +7,12 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = Category.GET_ALL_CATEGORIES, query =
                 "select c " +
-                        "from Category c"),
-        @NamedQuery(name = Category.GET_ALL_CATEGORIES, query =
-                "select c " +
                         "from Category c")
 })
 
 @Entity
 public class Category {
     public static final String GET_ALL_CATEGORIES= "GET_ALL_CATEGORIES";
-    public static final String GET_SUB_CATEGORIES = "GET_SUB_CATEGORIES";
-    public static final String GET_COUNT_OF_POSTS_BY_COUNTRY = "GET_COUNT_OF_POSTS_BY_COUNTRY";
-    public static final String GET_COUNT_OF_ALL_USERS = "GET_COUNT_OF_ALL_USERS";
 
     @Id
     private String name;
