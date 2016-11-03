@@ -1,6 +1,7 @@
-package org.pg6100.restApi.dto;
+package org.pg6100.restApi.dto.converter;
 
 import org.pg6100.quiz.entity.SubSubCategory;
+import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import java.util.List;
 import java.util.Objects;
