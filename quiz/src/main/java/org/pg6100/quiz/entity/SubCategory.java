@@ -1,8 +1,6 @@
 package org.pg6100.quiz.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = SubCategory.GET_SUB_CATEGORIES, query =
