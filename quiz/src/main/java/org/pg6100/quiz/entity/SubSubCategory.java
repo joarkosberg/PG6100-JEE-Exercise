@@ -12,38 +12,13 @@ import java.util.List;
 })
 
 @Entity
-public class SubSubCategory {
+public class SubSubCategory extends Category {
     public static final String GET_SUB_SUB_CATEGORIES = "GET_SUB_SUB_CATEGORIES";
-
-    @Id
-    private String name;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subSubCategory")
-    private List<Question> questions;
 
     @ManyToOne
     private SubCategory subCategory;
 
     public SubSubCategory(){
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Question> getQuestions() {
-        if(questions == null){
-            return new ArrayList<>();
-        }
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
     }
 
     public SubCategory getSubCategory() {

@@ -23,6 +23,9 @@ public class QuestionEJB {
         }
 
         SubSubCategory subSubCategory = em.find(SubSubCategory.class, subSubCategoryName);
+        if(subSubCategory == null){
+            return null;
+        }
 
         Question question = new Question();
         question.setQuestion(questionText);
@@ -30,7 +33,6 @@ public class QuestionEJB {
         question.setCorrectAnswer(correctAnswer);
         question.setSubSubCategory(subSubCategory);
 
-        subSubCategory.getQuestions().add(question);
         em.persist(question);
 
         return question.getId();

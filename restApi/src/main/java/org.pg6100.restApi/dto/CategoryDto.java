@@ -12,13 +12,9 @@ public class CategoryDto {
     @ApiModelProperty("Name of the category")
     public String name;
 
-    @ApiModelProperty("List of all sub categories for a category")
-    public List<SubCategory> subCategories;
-
     public CategoryDto(){}
 
-    public CategoryDto(String name, List<SubCategory> subCategories) {
+    public CategoryDto(String name) {
         this.name = name;
-        this.subCategories = subCategories;
     }
 }

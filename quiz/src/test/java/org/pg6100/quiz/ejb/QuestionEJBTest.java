@@ -4,16 +4,14 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.*;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class QuestionEJBTest {
@@ -64,9 +62,9 @@ public class QuestionEJBTest {
         assertTrue(questionEJB.getQuestions(subSubCategory3).stream().anyMatch(c -> c.getId() == question));
     }
 
-    @Test(expected = EJBException.class)
+    @Test
     public void testCreateQuestionWithoutValidCategory(){
-        questionEJB.createQuestion("subety", "Question", answers, 3);
+        assertNull(questionEJB.createQuestion("subety", "Question", answers, 3));
     }
 
     @Test

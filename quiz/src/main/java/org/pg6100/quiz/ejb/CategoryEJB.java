@@ -41,14 +41,15 @@ public class CategoryEJB {
      */
     public String createNewSubCategory(@NotNull String name, @NotNull String categoryName){
         Category category = em.find(Category.class, categoryName);
+        if(category == null){
+            return null;
+        }
 
         SubCategory subCategory = new SubCategory();
         subCategory.setName(name);
         subCategory.setCategory(category);
 
-        category.getCategories().add(subCategory);
         em.persist(subCategory);
-
         return subCategory.getName();
     }
 
@@ -63,12 +64,14 @@ public class CategoryEJB {
      */
     public String createNewSubSubCategory(@NotNull String name, String subCategoryName){
         SubCategory subCategory = em.find(SubCategory.class, subCategoryName);
+        if(subCategory == null){
+            return null;
+        }
 
         SubSubCategory subSubCategory = new SubSubCategory();
         subSubCategory.setName(name);
         subSubCategory.setSubCategory(subCategory);
 
-        subCategory.getSubSubCategories().add(subSubCategory);
         em.persist(subSubCategory);
 
         return subSubCategory.getName();

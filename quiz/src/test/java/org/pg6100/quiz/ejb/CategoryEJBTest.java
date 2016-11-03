@@ -11,7 +11,6 @@ import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.quiz.entity.SubSubCategory;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -97,8 +96,8 @@ public class CategoryEJBTest {
         assertNull(category2);
     }
 
-    @Test(expected = EJBException.class)
+    @Test
     public void testCreationOfSubWithoutValidCategory(){
-        categoryEJB.createNewSubCategory("NotSuchValid", "ThisDoNotWork");
+        assertNull(categoryEJB.createNewSubCategory("NotSuchValid", "ThisDoNotWork"));
     }
 }
