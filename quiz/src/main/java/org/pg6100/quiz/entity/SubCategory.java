@@ -19,7 +19,7 @@ public class SubCategory {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "subCategory")
-    private List<SubSubCategory> categories;
+    private List<SubSubCategory> subSubCategories;
 
     @ManyToOne
     private Category category;
@@ -35,15 +35,15 @@ public class SubCategory {
         this.name = name;
     }
 
-    public List<SubSubCategory> getCategories() {
-        if(categories == null){
+    public List<SubSubCategory> getSubSubCategories() {
+        if(subSubCategories == null){
             return new ArrayList<>();
         }
-        return categories;
+        return subSubCategories;
     }
 
-    public void setCategories(List<SubSubCategory> categories) {
-        this.categories = categories;
+    public void setSubSubCategories(List<SubSubCategory> subSubCategories) {
+        this.subSubCategories = subSubCategories;
     }
 
     public Category getCategory() {

@@ -68,7 +68,7 @@ public class CategoryEJB {
         subSubCategory.setName(name);
         subSubCategory.setSubCategory(subCategory);
 
-        subCategory.getCategories().add(subSubCategory);
+        subCategory.getSubSubCategories().add(subSubCategory);
         em.persist(subSubCategory);
 
         return subSubCategory.getName();
