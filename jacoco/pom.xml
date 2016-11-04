@@ -20,7 +20,6 @@
         <dependency>
             <groupId>org.pg6100</groupId>
             <artifactId>quiz</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
