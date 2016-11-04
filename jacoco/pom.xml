@@ -21,6 +21,12 @@
             <groupId>org.pg6100</groupId>
             <artifactId>quiz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.pg6100</groupId>
+            <artifactId>restApi</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
     </dependencies>
 
 
