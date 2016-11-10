@@ -14,6 +14,7 @@ public class SubSubCategoryConverter {
     public static SubSubCategoryDto transform(SubSubCategory entity){
         Objects.requireNonNull(entity);
         SubSubCategoryDto dto = new SubSubCategoryDto();
+        dto.id = String.valueOf(entity.getId());
         dto.name = entity.getName();
         dto.subCategory = entity.getSubCategory();
         return dto;

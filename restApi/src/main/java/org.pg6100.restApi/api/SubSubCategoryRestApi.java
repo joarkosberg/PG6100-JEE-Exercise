@@ -27,7 +27,7 @@ public interface SubSubCategoryRestApi {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiResponse(code = 200, message = "Name of the newly create sub sub category")
-    String createSubSubCategory(
+    Long createSubSubCategory(
             @ApiParam("Name of new sub sub category and parent sub category")
                     SubSubCategoryDto dto);
 
@@ -37,7 +37,7 @@ public interface SubSubCategoryRestApi {
     List<SubSubCategoryDto> getSubSubCategories(
             @ApiParam("Name of parent sub category")
             @PathParam("id")
-                    String subCategory);
+                    Long subCategory);
 
 
     //GET ID

@@ -14,7 +14,8 @@ public class CategoryConverter {
     public static CategoryDto transform(Category entity){
         Objects.requireNonNull(entity);
         CategoryDto dto = new CategoryDto();
-        dto.name = String.valueOf(entity.getName());
+        dto.id = String.valueOf(entity.getId());
+        dto.name = entity.getName();
         return dto;
     }
 

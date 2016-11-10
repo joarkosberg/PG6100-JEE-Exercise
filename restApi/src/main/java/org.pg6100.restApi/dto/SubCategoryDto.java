@@ -7,6 +7,9 @@ import org.pg6100.quiz.entity.Category;
 @ApiModel("A sub category belonging to a parent category")
 public class SubCategoryDto {
 
+    @ApiModelProperty("Id of the category")
+    public String id;
+
     @ApiModelProperty("Name of subcategory")
     public String name;
 
@@ -15,7 +18,8 @@ public class SubCategoryDto {
 
     public SubCategoryDto(){}
 
-    public SubCategoryDto(String name, Category category) {
+    public SubCategoryDto(String id, String name, Category category) {
+        this.id = id;
         this.name = name;
         this.category = category;
     }

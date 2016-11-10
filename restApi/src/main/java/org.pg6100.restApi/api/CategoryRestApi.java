@@ -28,7 +28,7 @@ public interface CategoryRestApi {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiResponse(code = 200, message = "Name of the newly created category")
-    String createCategory(
+    Long createCategory(
             @ApiParam("Name of category")
                     CategoryDto dto);
 
@@ -39,7 +39,7 @@ public interface CategoryRestApi {
     CategoryDto getCategory(
             @ApiParam("Id of category")
             @PathParam("id")
-                    String name);
+                    Long id);
 
     //PUT ID
     @ApiOperation("Get specified category by id")
@@ -49,7 +49,7 @@ public interface CategoryRestApi {
     void updateCategory(
             @ApiParam("Id of category")
             @PathParam("id")
-                    String id,
+                    Long id,
             @ApiParam("The category that will replace the old one")
                     CategoryDto dto);
 
@@ -66,7 +66,7 @@ public interface CategoryRestApi {
     void deleteCategory(
             @ApiParam("Id of category")
             @PathParam("id")
-                    String name);
+                    Long name);
 
 
     //GET withQuizes

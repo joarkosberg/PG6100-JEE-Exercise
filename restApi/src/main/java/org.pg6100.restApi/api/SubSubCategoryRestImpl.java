@@ -26,24 +26,24 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
     }
 
     @Override
-    public List<SubSubCategoryDto> getSubSubCategories(String subCategory) {
+    public List<SubSubCategoryDto> getSubSubCategories(Long subCategory) {
         return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategories(subCategory));
     }
 
     @Override
-    public String createSubSubCategory(SubSubCategoryDto dto) {
+    public Long createSubSubCategory(SubSubCategoryDto dto) {
         if(dto.name == null && dto.name.trim().isEmpty()){
             throw new WebApplicationException("Must specify name!", 400);
         }
 
-        String name;
+        Long id;
         try{
-            name = categoryEJB.createNewSubSubCategory(dto.name, dto.subCategory.getName());
+            id = categoryEJB.createNewSubSubCategory(dto.name, dto.subCategory.getId());
         }catch (Exception e){
             throw wrapException(e);
         }
 
-        return name;
+        return id;
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

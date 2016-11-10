@@ -31,12 +31,12 @@ public class CategoryRestImpl implements CategoryRestApi {
     }
 
     @Override
-    public String createCategory(CategoryDto dto) {
+    public Long createCategory(CategoryDto dto) {
         if(dto.name == null && dto.name.trim().isEmpty()){
             throw new WebApplicationException("Must specify name!", 400);
         }
 
-        String name;
+        Long name;
         try{
             name = categoryEJB.createNewCategory(dto.name);
         }catch (Exception e){
@@ -47,21 +47,21 @@ public class CategoryRestImpl implements CategoryRestApi {
     }
 
     @Override
-    public CategoryDto getCategory(String name) {
-        if (!categoryEJB.isPresent(name)) {
-            throw new WebApplicationException("Cannot find news with id: " + name, 404);
+    public CategoryDto getCategory(Long id) {
+        if (!categoryEJB.isPresent(id)) {
+            throw new WebApplicationException("Cannot find news with id: " + id, 404);
         }
-        return CategoryConverter.transform(categoryEJB.getCategory(name));
+        return CategoryConverter.transform(categoryEJB.getCategory(id));
     }
 
     @Override
-    public void updateCategory(String id, CategoryDto dto) {
+    public void updateCategory(Long id, CategoryDto dto) {
         if (!categoryEJB.isPresent(id)) {
             throw new WebApplicationException("Not allowed to create a category with PUT, and cannot find news with id: " + id, 404);
         }
 
         try {
-            categoryEJB.updateCategory(id, dto.name);
+            categoryEJB.update(id, dto.name);
         } catch (Exception e) {
             throw wrapException(e);
         }
@@ -69,11 +69,11 @@ public class CategoryRestImpl implements CategoryRestApi {
     }
 
     @Override
-    public void deleteCategory(String name) {
-        if (!categoryEJB.isPresent(name)) {
-            throw new WebApplicationException("Cannot find news with id: " + name, 404);
+    public void deleteCategory(Long id) {
+        if (!categoryEJB.isPresent(id)) {
+            throw new WebApplicationException("Cannot find news with id: " + id, 404);
         }
-        categoryEJB.deleteCategory(name);
+        categoryEJB.delete(id);
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

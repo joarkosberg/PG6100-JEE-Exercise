@@ -9,12 +9,16 @@ import java.util.List;
 @ApiModel("A Category for quizzes")
 public class CategoryDto {
 
+    @ApiModelProperty("Id of the category")
+    public String id;
+
     @ApiModelProperty("Name of the category")
     public String name;
 
     public CategoryDto(){}
 
-    public CategoryDto(String name) {
+    public CategoryDto(String id, String name) {
+        this.id = id;
         this.name = name;
     }
 }

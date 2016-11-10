@@ -40,7 +40,7 @@ public class CategoryRestTestBase {
                 .extract().as(CategoryDto[].class));
 
         list.stream().forEach(dto ->
-                given().pathParam("id", dto.name)
+                given().pathParam("id", dto.id)
                         .delete("/id/{id}")
                         .then().statusCode(204));
 

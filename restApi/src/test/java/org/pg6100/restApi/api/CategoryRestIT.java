@@ -21,7 +21,7 @@ public class CategoryRestIT extends CategoryRestTestBase {
     @Test
     public void testCreateAndGet() {
         String category = "c1";
-        CategoryDto dto = new CategoryDto(category);
+        CategoryDto dto = new CategoryDto(null, category);
 
         get().then().statusCode(200).body("size()", is(0));
 
@@ -38,22 +38,23 @@ public class CategoryRestIT extends CategoryRestTestBase {
     @Test
     public void testUpdate() throws Exception {
         //first create with a POST
+        String text = "cat";
         String id = given().contentType(ContentType.JSON)
-                .body(new CategoryDto("cat"))
+                .body(new CategoryDto(null, text))
                 .post()
                 .then()
                 .statusCode(200)
                 .extract().asString();
 
         //check if POST was fine
-        get("/id/" + id).then().body("name", is(id));
+        get("/id/" + id).then().body("name", is(text));
 
         String updatedText = "new updated categoryname";
 
         //now change text with PUT
         given().contentType(ContentType.JSON)
                 .pathParam("id", id)
-                .body(new CategoryDto(updatedText))
+                .body(new CategoryDto(id, updatedText))
                 .put("/id/{id}")
                 .then()
                 .statusCode(204);
