@@ -46,6 +46,36 @@ public class CategoryRestImpl implements CategoryRestApi {
         return name;
     }
 
+    @Override
+    public CategoryDto getCategory(String name) {
+        if (!categoryEJB.isPresent(name)) {
+            throw new WebApplicationException("Cannot find news with id: " + name, 404);
+        }
+        return CategoryConverter.transform(categoryEJB.getCategory(name));
+    }
+
+    @Override
+    public void updateCategory(String id, CategoryDto dto) {
+        if (!categoryEJB.isPresent(id)) {
+            throw new WebApplicationException("Not allowed to create a category with PUT, and cannot find news with id: " + id, 404);
+        }
+
+        try {
+            categoryEJB.updateCategory(id, dto.name);
+        } catch (Exception e) {
+            throw wrapException(e);
+        }
+
+    }
+
+    @Override
+    public void deleteCategory(String name) {
+        if (!categoryEJB.isPresent(name)) {
+            throw new WebApplicationException("Cannot find news with id: " + name, 404);
+        }
+        categoryEJB.deleteCategory(name);
+    }
+
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{
         Throwable cause = Throwables.getRootCause(e);
         if(cause instanceof ConstraintViolationException){

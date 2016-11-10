@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.pg6100.quiz.entity.Category;
 import org.pg6100.restApi.dto.CategoryDto;
 
 import static io.restassured.RestAssured.get;
@@ -29,8 +30,35 @@ public class CategoryRestIT extends CategoryRestTestBase {
                 .post()
                 .then()
                 .statusCode(200)
-                .extract().asString();
+                .extract();
 
         get().then().statusCode(200).body("size()", is(1));
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        //first create with a POST
+        String id = given().contentType(ContentType.JSON)
+                .body(new CategoryDto("cat"))
+                .post()
+                .then()
+                .statusCode(200)
+                .extract().asString();
+
+        //check if POST was fine
+        get("/id/" + id).then().body("name", is(id));
+
+        String updatedText = "new updated categoryname";
+
+        //now change text with PUT
+        given().contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .body(new CategoryDto(updatedText))
+                .put("/id/{id}")
+                .then()
+                .statusCode(204);
+
+        //was the PUT fine?
+        get("/id/" + id).then().body("name", is(updatedText));
     }
 }

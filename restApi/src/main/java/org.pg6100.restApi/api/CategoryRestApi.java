@@ -32,11 +32,42 @@ public interface CategoryRestApi {
             @ApiParam("Name of category")
                     CategoryDto dto);
 
-
     //GET ID
+    @ApiOperation("Get specified category by id")
+    @GET
+    @Path("/id/{id}")
+    CategoryDto getCategory(
+            @ApiParam("Id of category")
+            @PathParam("id")
+                    String name);
+
     //PUT ID
+    @ApiOperation("Get specified category by id")
+    @PUT
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void updateCategory(
+            @ApiParam("Id of category")
+            @PathParam("id")
+                    String id,
+            @ApiParam("The category that will replace the old one")
+                    CategoryDto dto);
+
+
+
+
     //PATCH ID
+
+
     //DELETE ID
+    @ApiOperation("Delete a category with the given id")
+    @DELETE
+    @Path("/id/{id}")
+    void deleteCategory(
+            @ApiParam("Id of category")
+            @PathParam("id")
+                    String name);
+
 
     //GET withQuizes
 

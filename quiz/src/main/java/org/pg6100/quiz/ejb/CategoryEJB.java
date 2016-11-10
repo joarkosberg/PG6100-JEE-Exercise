@@ -36,6 +36,19 @@ public class CategoryEJB {
         return query.getResultList();
     }
 
+    public Category getCategory(String name){
+        return em.find(Category.class, name);
+    }
+
+    public boolean updateCategory(@NotNull String id, @NotNull String name){
+        Category c = em.find(Category.class, id);
+        if(c == null)
+            return false;
+
+        c.setName(name);
+        return true;
+    }
+
     /*
     Sub Category
      */
@@ -62,6 +75,10 @@ public class CategoryEJB {
         Query query = em.createNamedQuery(SubCategory.GET_SUB_CATEGORIES);
         query.setParameter("category", categoryName);
         return query.getResultList();
+    }
+
+    public SubCategory getSubCategory(String name){
+        return em.find(SubCategory.class, name);
     }
 
     /*
@@ -91,5 +108,23 @@ public class CategoryEJB {
         Query query = em.createNamedQuery(SubSubCategory.GET_SUB_SUB_CATEGORIES);
         query.setParameter("subCategory", subCategoryName);
         return query.getResultList();
+    }
+
+    public SubSubCategory getSubSubCategory(String name){
+        return em.find(SubSubCategory.class, name);
+    }
+
+    //Universal
+    public boolean isPresent(String name){
+        return em.find(Category.class, name) != null;
+    }
+
+    public boolean deleteCategory(@NotNull String name){
+        Category c = em.find(Category.class, name);
+        if (c != null) {
+            em.remove(c);
+            return true;
+        }
+        return false;
     }
 }

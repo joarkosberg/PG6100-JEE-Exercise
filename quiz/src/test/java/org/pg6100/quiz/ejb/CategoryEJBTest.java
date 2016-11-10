@@ -4,6 +4,8 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pg6100.quiz.entity.Category;
@@ -27,14 +29,24 @@ public class CategoryEJBTest {
     @EJB
     private CategoryEJB categoryEJB;
 
+    @Before
+    @After
+    public void cleanDatabase() {
+        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.deleteCategory(n.getName()));
+        assertEquals(0, categoryEJB.getAllSubSubCategories().size());
+        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.deleteCategory(n.getName()));
+        assertEquals(0, categoryEJB.getAllSubCategories().size());
+        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.deleteCategory(n.getName()));
+        assertEquals(0, categoryEJB.getAllCategories().size());
+    }
+
     @Test
     public void testCreateCategories(){
-        int size = categoryEJB.getAllCategories().size();
         String category = categoryEJB.createNewCategory("category1");
         categoryEJB.createNewCategory("category2");
 
         List<Category> categories = categoryEJB.getAllCategories();
-        assertEquals(size + 2, categories.size());
+        assertEquals(2, categories.size());
         assertTrue(categories.stream().anyMatch(c -> category.equals(c.getName())));
     }
 
@@ -79,6 +91,7 @@ public class CategoryEJBTest {
         categoryEJB.createNewSubSubCategory("ss3", subCategory2);
         String subSubCategory4 = categoryEJB.createNewSubSubCategory("ss4", subCategory1);
 
+        assertEquals(3, categoryEJB.getAllCategories().size());
         assertEquals(3, categoryEJB.getSubSubCategories(subCategory2).size());
         assertEquals(1, categoryEJB.getSubSubCategories(subCategory1).size());
         assertFalse(categoryEJB.getSubSubCategories(subCategory2).stream().
@@ -87,11 +100,10 @@ public class CategoryEJBTest {
 
     @Test
     public void testCreateTwoCategoriesWithSameName(){
-        int size = categoryEJB.getAllCategories().size();
         String category1 = categoryEJB.createNewCategory("NoWork");
         String category2 = categoryEJB.createNewCategory("NoWork");
 
-        assertEquals(size + 1, categoryEJB.getAllCategories().size());
+        assertEquals(1, categoryEJB.getAllCategories().size());
         assertNotNull(category1);
         assertNull(category2);
     }
@@ -99,5 +111,10 @@ public class CategoryEJBTest {
     @Test
     public void testCreationOfSubWithoutValidCategory(){
         assertNull(categoryEJB.createNewSubCategory("NotSuchValid", "ThisDoNotWork"));
+    }
+
+    @Test
+    public void testUpdateCategoryName(){
+        //TODO
     }
 }

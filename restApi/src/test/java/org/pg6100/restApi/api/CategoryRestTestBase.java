@@ -27,10 +27,13 @@ public class CategoryRestTestBase {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    /* Not working yet
     @Before
     @After
     public void clean() {
+        /*TODO
+        Implement so it deletes subcategories and subsubcategories
+         */
+
         List<CategoryDto> list = Arrays.asList(given().accept(ContentType.JSON).get()
                 .then()
                 .statusCode(200)
@@ -38,10 +41,9 @@ public class CategoryRestTestBase {
 
         list.stream().forEach(dto ->
                 given().pathParam("id", dto.name)
-                        .delete("/{id}")
+                        .delete("/id/{id}")
                         .then().statusCode(204));
 
         get().then().statusCode(200).body("size()", is(0));
     }
-    */
 }

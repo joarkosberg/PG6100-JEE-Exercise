@@ -5,7 +5,8 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = Category.GET_ALL_CATEGORIES, query =
                 "select c " +
-                        "from Category c")
+                        "from Category c " +
+                        "where TYPE(c) = Category")
 })
 
 @Entity
