@@ -24,7 +24,6 @@ public class CategoryRestTestBase {
         // RestAssured configs shared by all the tests
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
-        RestAssured.basePath = "/quiz/api/category";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 

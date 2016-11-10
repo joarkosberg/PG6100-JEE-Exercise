@@ -1,6 +1,8 @@
 package org.pg6100.restApi.api;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
 
@@ -9,6 +11,11 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 
 public class CategoryRestIT extends CategoryRestTestBase {
+
+    @BeforeClass
+    public static void before(){
+        RestAssured.basePath = "/quiz/api/categories";
+    }
 
     @Test
     public void testCreateAndGet() {

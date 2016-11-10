@@ -53,6 +53,11 @@ public class CategoryEJB {
         return subCategory.getName();
     }
 
+    public List<SubCategory> getAllSubCategories(){
+        Query query = em.createNamedQuery(SubCategory.GET_ALL_SUB_CATEGORIES);
+        return query.getResultList();
+    }
+
     public List<SubCategory> getSubCategories(String categoryName){
         Query query = em.createNamedQuery(SubCategory.GET_SUB_CATEGORIES);
         query.setParameter("category", categoryName);
@@ -75,6 +80,11 @@ public class CategoryEJB {
         em.persist(subSubCategory);
 
         return subSubCategory.getName();
+    }
+
+    public List<SubSubCategory> getAllSubSubCategories(){
+        Query query = em.createNamedQuery(SubSubCategory.GET_ALL_SUB_SUB_CATEGORIES);
+        return query.getResultList();
     }
 
     public List<SubSubCategory> getSubSubCategories(String subCategoryName){

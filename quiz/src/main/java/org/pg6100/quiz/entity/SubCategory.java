@@ -3,6 +3,9 @@ package org.pg6100.quiz.entity;
 import javax.persistence.*;
 
 @NamedQueries({
+        @NamedQuery(name = SubCategory.GET_ALL_SUB_CATEGORIES, query =
+                "select c " +
+                        "from SubCategory c"),
         @NamedQuery(name = SubCategory.GET_SUB_CATEGORIES, query =
                 "select c " +
                         "from SubCategory c " +
@@ -11,6 +14,7 @@ import javax.persistence.*;
 
 @Entity
 public class SubCategory extends Category{
+    public static final String GET_ALL_SUB_CATEGORIES = "GET_ALL_SUB_CATEGORIES";
     public static final String GET_SUB_CATEGORIES = "GET_SUB_CATEGORIES";
 
     @ManyToOne

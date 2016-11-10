@@ -3,6 +3,8 @@ package org.pg6100.restApi;
 import io.swagger.jaxrs.config.BeanConfig;
 import org.pg6100.restApi.api.CategoryRestImpl;
 import org.pg6100.restApi.api.QuestionRestImpl;
+import org.pg6100.restApi.api.SubCategoryRestImpl;
+import org.pg6100.restApi.api.SubSubCategoryRestImpl;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -26,6 +28,8 @@ public class ApplicationConfig extends Application {
 
         HashSet<Class<?>> c = new HashSet<>();
         c.add(CategoryRestImpl.class);
+        c.add(SubCategoryRestImpl.class);
+        c.add(SubSubCategoryRestImpl.class);
         c.add(QuestionRestImpl.class);
 
         //add further configuration to activate SWAGGER
