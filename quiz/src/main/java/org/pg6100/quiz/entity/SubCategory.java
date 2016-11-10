@@ -10,7 +10,7 @@ import javax.persistence.*;
         @NamedQuery(name = SubCategory.GET_SUB_CATEGORIES, query =
                 "select c " +
                         "from SubCategory c " +
-                        "where c.category.name = :category")
+                        "where c.category.id = :id")
 })
 
 @Entity

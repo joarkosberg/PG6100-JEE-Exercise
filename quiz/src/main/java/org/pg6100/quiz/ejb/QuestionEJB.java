@@ -16,13 +16,13 @@ public class QuestionEJB {
     @PersistenceContext
     private EntityManager em;
 
-    public Long createQuestion(String subSubCategoryName, @NotNull String questionText,
+    public Long createQuestion(Long subSubCategoryId, @NotNull String questionText,
                                List<String> answers, int correctAnswer){
         if(answers.size() != 4 || correctAnswer > 3){
             return null;
         }
 
-        SubSubCategory subSubCategory = em.find(SubSubCategory.class, subSubCategoryName);
+        SubSubCategory subSubCategory = em.find(SubSubCategory.class, subSubCategoryId);
         if(subSubCategory == null){
             return null;
         }
@@ -38,9 +38,23 @@ public class QuestionEJB {
         return question.getId();
     }
 
-    public List<Question> getQuestions(String subSubCategoryName){
+    public List<Question> getQuestions(Long subSubCategoryId){
         Query query = em.createNamedQuery(Question.GET_QUESTIONS);
-        query.setParameter("category", subSubCategoryName);
+        query.setParameter("id", subSubCategoryId);
         return query.getResultList();
+    }
+
+    public List<Question> getAllQuestions(){
+        Query query = em.createNamedQuery(Question.GET_ALL_QUESTIONS);
+        return query.getResultList();
+    }
+
+    public boolean deleteQuestion(@NotNull Long id){
+        Question q = em.find(Question.class, id);
+        if (q != null) {
+            em.remove(q);
+            return true;
+        }
+        return false;
     }
 }

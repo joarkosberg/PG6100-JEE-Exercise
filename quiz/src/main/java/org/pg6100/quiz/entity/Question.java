@@ -6,15 +6,19 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NamedQueries({
+        @NamedQuery(name = Question.GET_ALL_QUESTIONS, query =
+                "select q " +
+                        "from Question  q"),
         @NamedQuery(name = Question.GET_QUESTIONS, query =
                 "select q " +
                         "from Question q " +
-                        "where q.subSubCategory.name = :category")
+                        "where q.subSubCategory.id = :id")
 })
 
 @Entity
 public class Question {
     public static final String GET_QUESTIONS = "GET_QUESTIONS";
+    public static final String GET_ALL_QUESTIONS = "GET_ALL_QUESTIONS";
 
     @Id
     @GeneratedValue

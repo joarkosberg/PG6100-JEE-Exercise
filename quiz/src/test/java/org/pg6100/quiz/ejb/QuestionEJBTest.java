@@ -4,6 +4,8 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,11 +31,24 @@ public class QuestionEJBTest {
     @EJB
     private QuestionEJB questionEJB;
 
+    @Before
+    @After
+    public void cleanDatabase() {
+        questionEJB.getAllQuestions().stream().forEach(n -> questionEJB.deleteQuestion(n.getId()));
+        assertEquals(0, questionEJB.getAllQuestions().size());
+        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        assertEquals(0, categoryEJB.getAllSubSubCategories().size());
+        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        assertEquals(0, categoryEJB.getAllSubCategories().size());
+        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        assertEquals(0, categoryEJB.getAllCategories().size());
+    }
+
     @Test
     public void testCreateQuestions(){
-        String category = categoryEJB.createNewCategory("category1");
-        String subCategory = categoryEJB.createNewSubCategory("sub", category);
-        String subSubCategory = categoryEJB.createNewSubSubCategory("subsub", subCategory);
+        Long category = categoryEJB.createNewCategory("category1");
+        Long subCategory = categoryEJB.createNewSubCategory("sub", category);
+        Long subSubCategory = categoryEJB.createNewSubSubCategory("subsub", subCategory);
 
         Long question = questionEJB.createQuestion(subSubCategory, "Question", answers, 3);
         assertNotNull(question);
@@ -42,12 +57,12 @@ public class QuestionEJBTest {
 
     @Test
     public void testDifferentQuestionsInDifferentCategories(){
-        String category = categoryEJB.createNewCategory("category2");
-        String subCategory = categoryEJB.createNewSubCategory("sub1", category);
+        Long category = categoryEJB.createNewCategory("category2");
+        Long subCategory = categoryEJB.createNewSubCategory("sub1", category);
 
-        String subSubCategory1 = categoryEJB.createNewSubSubCategory("subsub1", subCategory);
-        String subSubCategory2 = categoryEJB.createNewSubSubCategory("subsub2", subCategory);
-        String subSubCategory3 = categoryEJB.createNewSubSubCategory("subsub3", subCategory);
+        Long subSubCategory1 = categoryEJB.createNewSubSubCategory("subsub1", subCategory);
+        Long subSubCategory2 = categoryEJB.createNewSubSubCategory("subsub2", subCategory);
+        Long subSubCategory3 = categoryEJB.createNewSubSubCategory("subsub3", subCategory);
 
         questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
         questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
@@ -64,14 +79,14 @@ public class QuestionEJBTest {
 
     @Test
     public void testCreateQuestionWithoutValidCategory(){
-        assertNull(questionEJB.createQuestion("subety", "Question", answers, 3));
+        assertNull(questionEJB.createQuestion(Long.valueOf(123), "Question", answers, 3));
     }
 
     @Test
     public void testCreateQuestionWithAnswerOutOfBounds(){
-        String category = categoryEJB.createNewCategory("categoryX");
-        String subCategory = categoryEJB.createNewSubCategory("subX", category);
-        String subSubCategory = categoryEJB.createNewSubSubCategory("subsubX", subCategory);
+        Long category = categoryEJB.createNewCategory("categoryX");
+        Long subCategory = categoryEJB.createNewSubCategory("subX", category);
+        Long subSubCategory = categoryEJB.createNewSubSubCategory("subsubX", subCategory);
 
         Long question = questionEJB.createQuestion(subSubCategory, "Question", answers, 4);
         assertNull(question);
