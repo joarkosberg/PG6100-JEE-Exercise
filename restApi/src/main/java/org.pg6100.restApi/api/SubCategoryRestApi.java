@@ -32,6 +32,7 @@ public interface SubCategoryRestApi {
             @ApiParam("Name of new sub category and parent category")
                     SubCategoryDto dto);
 
+    //GET all subcategories with the given parent specified by id
     @ApiOperation("Get all sub categories for a given category")
     @GET
     @Path("/parent/{id}")
@@ -45,5 +46,6 @@ public interface SubCategoryRestApi {
     //PATCH ID
     //DELETE ID
 
-    //GET ID subsubcategories
+    //GET all subsubcategories of the subcategory specified by id
+
 }

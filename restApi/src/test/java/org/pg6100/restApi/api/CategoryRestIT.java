@@ -19,7 +19,7 @@ public class CategoryRestIT extends CategoryRestTestBase {
     }
 
     @Test
-    public void testCreateAndGet() {
+    public void testCreateAndGetCategory() {
         String category = "c1";
         CategoryDto dto = new CategoryDto(null, category);
 
@@ -36,7 +36,7 @@ public class CategoryRestIT extends CategoryRestTestBase {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void testUpdateCategory() throws Exception {
         //first create with a POST
         String text = "cat";
         String id = given().contentType(ContentType.JSON)

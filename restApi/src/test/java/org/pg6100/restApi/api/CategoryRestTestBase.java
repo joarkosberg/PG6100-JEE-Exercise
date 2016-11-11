@@ -31,7 +31,7 @@ public class CategoryRestTestBase {
     @After
     public void clean() {
         /*TODO
-        Implement so it deletes subcategories and subsubcategories
+        Implement so it deletes subcategories, subsubcategories and questions
          */
 
         List<CategoryDto> list = Arrays.asList(given().accept(ContentType.JSON).get()

@@ -12,7 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Api(value = "/categories" , description = "Handling of creating and retrieving quiz data")
+@Api(value = "/categories" , description = "Handling of creating and retrieving category data")
 @Path("/categories")
 @Produces({
         Formats.BASE_JSON
