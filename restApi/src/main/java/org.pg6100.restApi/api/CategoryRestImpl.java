@@ -76,6 +76,24 @@ public class CategoryRestImpl implements CategoryRestApi {
         categoryEJB.delete(id);
     }
 
+
+    @Override
+    public List<CategoryDto> getCategoriesWithQuizzes() {
+        return CategoryConverter.transform(categoryEJB.getCategoriesWithQuestions());
+    }
+
+    @Override
+    public List<SubSubCategoryDto> getSubSubCategoriesWithQuizzes() {
+        return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions());
+    }
+
+    @Override
+    public List<SubCategoryDto> getSubCategories(Long id) {
+        return SubCategoryConverter.transform(categoryEJB.getSubCategories(id));
+    }
+
+
+
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{
         Throwable cause = Throwables.getRootCause(e);
         if(cause instanceof ConstraintViolationException){

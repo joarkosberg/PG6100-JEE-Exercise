@@ -1,48 +1,12 @@
 package org.pg6100.quiz.ejb;
 
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class QuestionEJBTest {
-    private List<String> answers = Arrays.asList("a1", "a2", "a3", "a4");
-
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addPackages(true, "org.pg6100.quiz")
-                .addAsResource("META-INF/persistence.xml");
-    }
-
-    @EJB
-    private CategoryEJB categoryEJB;
-    @EJB
-    private QuestionEJB questionEJB;
-
-    @Before
-    @After
-    public void cleanDatabase() {
-        questionEJB.getAllQuestions().stream().forEach(n -> questionEJB.deleteQuestion(n.getId()));
-        assertEquals(0, questionEJB.getAllQuestions().size());
-        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllSubSubCategories().size());
-        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllSubCategories().size());
-        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllCategories().size());
-    }
+public class QuestionEJBTest extends EJBTestBase{
 
     @Test
     public void testCreateQuestions(){

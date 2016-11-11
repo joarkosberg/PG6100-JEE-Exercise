@@ -1,45 +1,17 @@
 package org.pg6100.quiz.ejb;
 
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pg6100.quiz.entity.Category;
 import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.quiz.entity.SubSubCategory;
-
-import javax.ejb.EJB;
 import java.util.List;
-
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class CategoryEJBTest {
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addPackages(true, "org.pg6100.quiz")
-                .addAsResource("META-INF/persistence.xml");
-    }
-
-    @EJB
-    private CategoryEJB categoryEJB;
-
-    @Before
-    @After
-    public void cleanDatabase() {
-        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllSubSubCategories().size());
-        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllSubCategories().size());
-        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
-        assertEquals(0, categoryEJB.getAllCategories().size());
-    }
+public class CategoryEJBTest extends EJBTestBase {
 
     @Test
     public void testCreateCategories(){
@@ -130,5 +102,52 @@ public class CategoryEJBTest {
 
         assertTrue(categoryEJB.update(subSubCategory, newName));
         assertEquals(newName, categoryEJB.getSubSubCategory(subSubCategory).getName());
+    }
+
+    @Test
+    public void testGetCategoriesWithQuestions(){
+        assertEquals(0, categoryEJB.getCategoriesWithQuestions().size());
+
+        Long category1 = categoryEJB.createNewCategory("c1");
+        Long category2 = categoryEJB.createNewCategory("c2");
+        Long category3 = categoryEJB.createNewCategory("c3");
+
+        Long subCategory1 = categoryEJB.createNewSubCategory("s1", category1);
+        Long subCategory2 = categoryEJB.createNewSubCategory("s2", category3);
+        Long subCategory3 = categoryEJB.createNewSubCategory("s2", category3);
+
+        Long subSubCategory1 = categoryEJB.createNewSubSubCategory("ss1", subCategory1);
+        Long subSubCategory2 = categoryEJB.createNewSubSubCategory("ss2", subCategory2);
+        Long subSubCategory3 = categoryEJB.createNewSubSubCategory("ss3", subCategory3);
+
+        assertEquals(0, categoryEJB.getCategoriesWithQuestions().size());
+
+        questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
+        questionEJB.createQuestion(subSubCategory2, "Question", answers, 3);
+        questionEJB.createQuestion(subSubCategory3, "Question", answers, 3);
+
+        List<Category> categories = categoryEJB.getCategoriesWithQuestions();
+        assertEquals(2, categories.size());
+        assertTrue(categories.stream().anyMatch(c -> c.getId().equals(category1)));
+        assertFalse(categories.stream().anyMatch(c -> c.getId().equals(category2)));
+    }
+
+    @Test
+    public void testGetSubSubCategoriesWithQuestions(){
+        Long category1 = categoryEJB.createNewCategory("c1");
+        Long subCategory1 = categoryEJB.createNewSubCategory("s1", category1);
+
+        Long subSubCategory1 = categoryEJB.createNewSubSubCategory("ss1", subCategory1);
+        Long subSubCategory2 = categoryEJB.createNewSubSubCategory("ss2", subCategory1);
+        Long subSubCategory3 = categoryEJB.createNewSubSubCategory("ss3", subCategory1);
+
+        questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
+        questionEJB.createQuestion(subSubCategory3, "Question", answers, 3);
+        questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
+
+        List<SubSubCategory> subSubCategories = categoryEJB.getSubSubCategoriesWithQuestions();
+        assertEquals(2, subSubCategories.size());
+        assertTrue(subSubCategories.stream().anyMatch(c -> c.getId().equals(subSubCategory1)));
+        assertFalse(subSubCategories.stream().anyMatch(c -> c.getId().equals(subSubCategory2)));
     }
 }

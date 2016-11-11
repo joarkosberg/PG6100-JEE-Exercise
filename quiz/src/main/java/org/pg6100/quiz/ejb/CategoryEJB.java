@@ -1,21 +1,31 @@
 package org.pg6100.quiz.ejb;
 
 import org.pg6100.quiz.entity.Category;
+import org.pg6100.quiz.entity.Question;
 import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.quiz.entity.SubSubCategory;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Stateless
 public class CategoryEJB {
 
     @PersistenceContext
     private EntityManager em;
+
+    @EJB
+    private QuestionEJB questionEJB;
 
     /*
     Category
@@ -31,6 +41,23 @@ public class CategoryEJB {
     public List<Category> getAllCategories(){
         Query query = em.createNamedQuery(Category.GET_ALL_CATEGORIES);
         return query.getResultList();
+    }
+
+    public List<Category> getCategoriesWithQuestions(){
+        List<Question> questions = questionEJB.getAllQuestions();
+        if(questions.size() == 0){
+            return new ArrayList<>();
+        }
+
+        Set<Long> categories = questions
+                .stream()
+                .map(q -> q.getSubSubCategory().getSubCategory().getCategory().getId())
+                .collect(toSet());
+
+        return getAllCategories()
+                .stream()
+                .filter(c -> categories.contains(c.getId()))
+                .collect(Collectors.toList());
     }
 
     public Category getCategory(Long id){
@@ -96,6 +123,23 @@ public class CategoryEJB {
         Query query = em.createNamedQuery(SubSubCategory.GET_SUB_SUB_CATEGORIES);
         query.setParameter("id", subCategoryId);
         return query.getResultList();
+    }
+
+    public List<SubSubCategory> getSubSubCategoriesWithQuestions(){
+        List<Question> questions = questionEJB.getAllQuestions();
+        if(questions.size() == 0){
+            return new ArrayList<>();
+        }
+
+        Set<Long> subSubCategories = questions
+                .stream()
+                .map(q -> q.getSubSubCategory().getId())
+                .collect(toSet());
+
+        return getAllSubSubCategories()
+                .stream()
+                .filter(c -> subSubCategories.contains(c.getId()))
+                .collect(Collectors.toList());
     }
 
     public SubSubCategory getSubSubCategory(Long id){
