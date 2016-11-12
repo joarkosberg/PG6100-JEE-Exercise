@@ -1,8 +1,10 @@
 package org.pg6100.restApi.api;
 
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
+import org.pg6100.restApi.dto.converter.SubCategoryConverter;
 import org.pg6100.restApi.dto.converter.SubSubCategoryConverter;
 
 import javax.ejb.EJB;
@@ -28,6 +30,44 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
     @Override
     public List<SubSubCategoryDto> getSubSubCategories(Long subCategory) {
         return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategories(subCategory));
+    }
+
+    @Override
+    public SubSubCategoryDto getSubSubCategory(Long id) {
+        if(!categoryEJB.isSubSubCategoryPresent(id)){
+            throw new WebApplicationException("Cannot find sub sub category with id: " + id, 404);
+        }
+        return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategory(id));
+    }
+
+    @Override
+    public void updateSubSubCategory(Long id, SubSubCategoryDto dto) {
+        Long dtoID;
+        try {
+            dtoID = Long.parseLong(dto.id);
+        } catch (Exception e) {
+            throw new WebApplicationException("Invalid id: " + dto.id, 400);
+        }
+
+        if (dtoID != id)
+            throw new WebApplicationException("Not allowed to change the id of the resource", 409);
+        if (!categoryEJB.isSubSubCategoryPresent(id))
+            throw new WebApplicationException("Not allowed to create a sub sub category with PUT, " +
+                    "and cannot find sub sub category with id: " + dtoID, 404);
+
+        try {
+            categoryEJB.updateSubSubCategory(id, dto.name, dto.subCategory);
+        } catch (Exception e) {
+            throw wrapException(e);
+        }
+    }
+
+    @Override
+    public void deleteSubSubCategory(Long id) {
+        if (!categoryEJB.isSubSubCategoryPresent(id)) {
+            throw new WebApplicationException("Cannot find sub sub category with id: " + id, 404);
+        }
+        categoryEJB.delete(id);
     }
 
     @Override

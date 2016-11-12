@@ -54,7 +54,8 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
         if (dtoID != id)
             throw new WebApplicationException("Not allowed to change the id of the resource", 409);
         if (!categoryEJB.isSubCategoryPresent(id))
-            throw new WebApplicationException("Not allowed to create a news with PUT, and cannot find sub category with id: " + dtoID, 404);
+            throw new WebApplicationException("Not allowed to create a sub category with PUT, " +
+                    "and cannot find sub category with id: " + dtoID, 404);
 
         try {
             categoryEJB.updateSubCategory(id, dto.name, dto.category);

@@ -26,7 +26,7 @@ public interface SubSubCategoryRestApi {
     @ApiOperation("Create a new sub sub category")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiResponse(code = 200, message = "Name of the newly create sub sub category")
+    @ApiResponse(code = 200, message = "Id of the newly create sub sub category")
     Long createSubSubCategory(
             @ApiParam("Name of new sub sub category and parent sub category")
                     SubSubCategoryDto dto);
@@ -40,10 +40,35 @@ public interface SubSubCategoryRestApi {
             @PathParam("id")
                     Long subCategory);
 
+    @ApiOperation("Get specified sub sub category by id")
+    @GET
+    @Path("/id/{id}")
+    SubSubCategoryDto getSubSubCategory(
+            @ApiParam("Id of sub sub category")
+            @PathParam("id")
+                    Long id);
 
-    //GET ID
-    //PUT ID
-    //PATCH ID
-    //DELETE ID
+    @ApiOperation("Update specified sub sub category by id")
+    @PUT
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void updateSubSubCategory(
+            @ApiParam("Id of sub sub category")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("The sub sub category that will replace the old one")
+                    SubSubCategoryDto dto);
 
+
+    //PATCH ID /id/{id}
+
+
+
+    @ApiOperation("Delete the sub sub category with the given id")
+    @DELETE
+    @Path("/id/{id}")
+    void deleteSubSubCategory(
+            @ApiParam("Id of sub sub category")
+            @PathParam("id")
+                    Long id);
 }

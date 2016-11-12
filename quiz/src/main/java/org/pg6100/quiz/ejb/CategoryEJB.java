@@ -69,7 +69,7 @@ public class CategoryEJB {
     public boolean isCategoryPresent(Long id){
         Query query = em.createNamedQuery(Category.GET_CATEGORY);
         query.setParameter("id", id);
-        return query.getSingleResult() != null;
+        return query.getResultList().size() > 0;
     }
 
     public boolean updateCategory(@NotNull Long id, @NotNull String name){
