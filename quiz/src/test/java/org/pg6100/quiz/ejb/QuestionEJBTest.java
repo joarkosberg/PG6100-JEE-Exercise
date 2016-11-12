@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class QuestionEJBTest extends EJBTestBase{
 
     @Test
-    public void testCreateQuestions(){
+    public void testCreateQuestion(){
         Long category = categoryEJB.createNewCategory("category1");
         Long subCategory = categoryEJB.createNewSubCategory("sub", category);
         Long subSubCategory = categoryEJB.createNewSubSubCategory("subsub", subCategory);
@@ -54,5 +54,21 @@ public class QuestionEJBTest extends EJBTestBase{
 
         Long question = questionEJB.createQuestion(subSubCategory, "Question", answers, 4);
         assertNull(question);
+    }
+
+    @Test
+    public void testUpdateQuestion(){
+        Long category = categoryEJB.createNewCategory("category");
+        Long subCategory = categoryEJB.createNewSubCategory("sub", category);
+        Long subSubCategory = categoryEJB.createNewSubSubCategory("subsub", subCategory);
+
+        String questionText = "Hei hei";
+        Long question = questionEJB.createQuestion(subSubCategory, questionText, answers, 3);
+        assertEquals(questionText, questionEJB.getQuestion(question).getQuestion());
+
+        String newQuestionText = "Shit is new";
+        assertTrue(questionEJB.updateQuestion(question, subSubCategory, newQuestionText, answers, 3));
+        assertNotEquals(questionText, questionEJB.getQuestion(question).getQuestion());
+        assertEquals(newQuestionText, questionEJB.getQuestion(question).getQuestion());
     }
 }

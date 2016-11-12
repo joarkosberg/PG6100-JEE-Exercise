@@ -38,6 +38,19 @@ public class QuestionEJB {
         return question.getId();
     }
 
+    public boolean updateQuestion(@NotNull Long id, @NotNull Long subSubCategoryId,
+                                  @NotNull String questionText, @NotNull List<String> answers, @NotNull int correctAnswer){
+        Question q = getQuestion(id);
+        if(q == null)
+            return false;
+
+        q.setSubSubCategory(em.find(SubSubCategory.class, subSubCategoryId));
+        q.setQuestion(questionText);
+        q.setAnswers(answers);
+        q.setCorrectAnswer(correctAnswer);
+        return true;
+    }
+
     public List<Question> getQuestions(Long subSubCategoryId){
         Query query = em.createNamedQuery(Question.GET_QUESTIONS);
         query.setParameter("id", subSubCategoryId);
@@ -47,6 +60,14 @@ public class QuestionEJB {
     public List<Question> getAllQuestions(){
         Query query = em.createNamedQuery(Question.GET_ALL_QUESTIONS);
         return query.getResultList();
+    }
+
+    public boolean isPresent(Long id){
+        return em.find(Question.class, id) != null;
+    }
+
+    public Question getQuestion(Long id){
+        return em.find(Question.class, id);
     }
 
     public boolean deleteQuestion(@NotNull Long id){

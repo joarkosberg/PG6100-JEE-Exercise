@@ -1,5 +1,6 @@
 package org.pg6100.restApi.api;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
@@ -33,8 +34,10 @@ public class CategoryRestImpl implements CategoryRestApi {
 
     @Override
     public Long createCategory(CategoryDto dto) {
-        if(dto.name == null && dto.name.trim().isEmpty()){
-            throw new WebApplicationException("Must specify name!", 400);
+        if(!Strings.isNullOrEmpty(dto.id))
+            throw new WebApplicationException("Cannot specify id for a newly generated categories", 400);
+        if(Strings.isNullOrEmpty(dto.name)){
+            throw new WebApplicationException("Must specify name for category", 400);
         }
 
         Long name;

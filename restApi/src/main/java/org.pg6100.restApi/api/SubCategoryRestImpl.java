@@ -1,9 +1,8 @@
 package org.pg6100.restApi.api;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
-import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.SubCategoryConverter;
@@ -79,8 +78,10 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
 
     @Override
     public Long createSubCategory(SubCategoryDto dto) {
-        if(dto.name == null && dto.name.trim().isEmpty()){
-            throw new WebApplicationException("Must specify name!", 400);
+        if(!Strings.isNullOrEmpty(dto.id))
+            throw new WebApplicationException("Cannot specify id for a newly generated sub categories", 400);
+        if(Strings.isNullOrEmpty(dto.name)){
+            throw new WebApplicationException("Must specify name of sub category", 400);
         }
 
         Long id;

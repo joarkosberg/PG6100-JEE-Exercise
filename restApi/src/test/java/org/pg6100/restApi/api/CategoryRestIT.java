@@ -4,18 +4,17 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pg6100.quiz.entity.Category;
 import org.pg6100.restApi.dto.CategoryDto;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 
-public class CategoryRestIT extends CategoryRestTestBase {
+public class CategoryRestIT extends TestBase {
 
     @BeforeClass
     public static void before(){
-        RestAssured.basePath = "/quiz/api/categories";
+        RestAssured.basePath = categoryRest;
     }
 
     @Test
@@ -60,6 +59,7 @@ public class CategoryRestIT extends CategoryRestTestBase {
                 .statusCode(204);
 
         //was the PUT fine?
+        get().then().statusCode(200).body("size()", is(1));
         get("/id/" + id).then().body("name", is(updatedText));
     }
 }

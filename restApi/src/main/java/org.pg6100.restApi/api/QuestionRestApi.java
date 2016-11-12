@@ -2,12 +2,12 @@ package org.pg6100.restApi.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.pg6100.restApi.dto.CategoryDto;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import org.pg6100.restApi.dto.QuestionDto;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Api(value = "/quizzes" , description = "Handling of creating and retrieving quiz data")
@@ -21,15 +21,45 @@ public interface QuestionRestApi {
     //GET
     @ApiOperation("Retrieve a list of all the questions")
     @GET
-    List<QuestionDto> getQuestions();
+    List<QuestionDto> getAllQuestions();
 
     //POST
+    @ApiOperation("Create a new question")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiResponse(code = 200, message = "Id of the newly created question")
+    Long createQuestion(
+            @ApiParam("Text of question, answers, correctAnswer and which subsubcategory it belongs to")
+                    QuestionDto dto);
+
+    @ApiOperation("Get specific question by id")
+    @GET
+    @Path("/id/{id}")
+    QuestionDto getQuestion(
+            @ApiParam("Id of the question")
+            @PathParam("id")
+                    Long id);
+
+    @ApiOperation("Update specified question by id")
+    @PUT
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void updateQuestion(
+            @ApiParam("Id of question")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("Question to replace the old one")
+                    QuestionDto dto);
 
 
+    //PATCH ID /id/{id}
 
-    //GET ID
-    //PUT ID
-    //PATCH ID
-    //DELETE ID
 
+    @ApiOperation("Delete a question with the given id")
+    @DELETE
+    @Path("/id/{id}")
+    void deleteQuestion(
+            @ApiParam("Id of question")
+            @PathParam("id")
+                    Long id);
 }
