@@ -42,7 +42,7 @@ public interface CategoryRestApi {
             @PathParam("id")
                     Long id);
 
-    @ApiOperation("Get specified category by id")
+    @ApiOperation("Update specified category by id")
     @PUT
     @Path("/id/{id}")
     @Consumes(MediaType.APPLICATION_JSON)

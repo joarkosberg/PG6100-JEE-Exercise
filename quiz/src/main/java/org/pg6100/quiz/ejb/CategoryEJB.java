@@ -61,7 +61,24 @@ public class CategoryEJB {
     }
 
     public Category getCategory(Long id){
-        return em.find(Category.class, id);
+        Query query = em.createNamedQuery(Category.GET_CATEGORY);
+        query.setParameter("id", id);
+        return (Category) query.getSingleResult();
+    }
+
+    public boolean isCategoryPresent(Long id){
+        Query query = em.createNamedQuery(Category.GET_CATEGORY);
+        query.setParameter("id", id);
+        return query.getSingleResult() != null;
+    }
+
+    public boolean updateCategory(@NotNull Long id, @NotNull String name){
+        Category c = em.find(Category.class, id);
+        if(c == null)
+            return false;
+
+        c.setName(name);
+        return true;
     }
 
     /*
@@ -94,6 +111,20 @@ public class CategoryEJB {
 
     public SubCategory getSubCategory(Long id){
         return em.find(SubCategory.class, id);
+    }
+
+    public boolean isSubCategoryPresent(Long id){
+        return em.find(SubCategory.class, id) != null;
+    }
+
+    public boolean updateSubCategory(@NotNull Long id, @NotNull String name, @NotNull Category category){
+        SubCategory c = em.find(SubCategory.class, id);
+        if(c == null)
+            return false;
+
+        c.setName(name);
+        c.setCategory(category);
+        return true;
     }
 
     /*
@@ -146,20 +177,21 @@ public class CategoryEJB {
         return em.find(SubSubCategory.class, id);
     }
 
-    //Universal
-    public boolean isPresent(Long id){
-        return em.find(Category.class, id) != null;
+    public boolean isSubSubCategoryPresent(Long id){
+        return em.find(SubCategory.class, id) != null;
     }
 
-    public boolean update(@NotNull Long id, @NotNull String name){
-        Category c = em.find(Category.class, id);
+    public boolean updateSubSubCategory(@NotNull Long id, @NotNull String name, @NotNull SubCategory subCategory){
+        SubSubCategory c = em.find(SubSubCategory.class, id);
         if(c == null)
             return false;
 
         c.setName(name);
+        c.setSubCategory(subCategory);
         return true;
     }
 
+    //Universal
     public boolean delete(@NotNull Long id){
         Category c = em.find(Category.class, id);
         if (c != null) {

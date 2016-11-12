@@ -88,19 +88,19 @@ public class CategoryEJBTest extends EJBTestBase {
     }
 
     @Test
-    public void testUpdateIsUniversal(){
+    public void testUpdateMethods(){
         Long category = categoryEJB.createNewCategory("name");
         Long subCategory = categoryEJB.createNewSubCategory("sub", category);
         Long subSubCategory = categoryEJB.createNewSubSubCategory("sub", subCategory);
 
         String newName = "new";
-        assertTrue(categoryEJB.update(category, newName));
+        assertTrue(categoryEJB.updateCategory(category, newName));
         assertEquals(newName, categoryEJB.getCategory(category).getName());
 
-        assertTrue(categoryEJB.update(subCategory, newName));
+        assertTrue(categoryEJB.updateSubCategory(subCategory, newName, categoryEJB.getCategory(category)));
         assertEquals(newName, categoryEJB.getSubCategory(subCategory).getName());
 
-        assertTrue(categoryEJB.update(subSubCategory, newName));
+        assertTrue(categoryEJB.updateSubSubCategory(subSubCategory, newName, categoryEJB.getSubCategory(subCategory)));
         assertEquals(newName, categoryEJB.getSubSubCategory(subSubCategory).getName());
     }
 

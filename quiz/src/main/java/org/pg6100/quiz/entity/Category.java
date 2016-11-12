@@ -8,12 +8,17 @@ import javax.persistence.*;
         @NamedQuery(name = Category.GET_ALL_CATEGORIES, query =
                 "select c " +
                         "from Category c " +
-                        "where TYPE(c) = Category")
+                        "where TYPE(c) = Category"),
+        @NamedQuery(name = Category.GET_CATEGORY, query =
+                "select c " +
+                        "from Category c " +
+                        "where TYPE(c) = Category and c.id = :id")
 })
 
 @Entity
 public class Category {
     public static final String GET_ALL_CATEGORIES= "GET_ALL_CATEGORIES";
+    public static final String GET_CATEGORY= "GET_CATEGORY";
 
     @Id
     @GeneratedValue

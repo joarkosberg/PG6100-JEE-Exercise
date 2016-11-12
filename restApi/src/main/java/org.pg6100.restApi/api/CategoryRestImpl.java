@@ -3,6 +3,7 @@ package org.pg6100.restApi.api;
 import com.google.common.base.Throwables;
 import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.quiz.entity.Category;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.CategoryConverter;
@@ -48,30 +49,37 @@ public class CategoryRestImpl implements CategoryRestApi {
 
     @Override
     public CategoryDto getCategory(Long id) {
-        if (!categoryEJB.isPresent(id)) {
-            throw new WebApplicationException("Cannot find news with id: " + id, 404);
+        if (!categoryEJB.isCategoryPresent(id)) {
+            throw new WebApplicationException("Cannot find category with id: " + id, 404);
         }
         return CategoryConverter.transform(categoryEJB.getCategory(id));
     }
 
     @Override
     public void updateCategory(Long id, CategoryDto dto) {
-        if (!categoryEJB.isPresent(id)) {
-            throw new WebApplicationException("Not allowed to create a category with PUT, and cannot find news with id: " + id, 404);
+        Long dtoID;
+        try {
+            dtoID = Long.parseLong(dto.id);
+        } catch (Exception e) {
+            throw new WebApplicationException("Invalid id: " + dto.id, 400);
         }
 
+        if (!dtoID.equals(id))
+            throw new WebApplicationException("Not allowed to change the id of the resource1", 409);
+        if (!categoryEJB.isCategoryPresent(id))
+            throw new WebApplicationException("Not allowed to create a news with PUT, and cannot find category with id: " + dtoID, 404);
+
         try {
-            categoryEJB.update(id, dto.name);
+            categoryEJB.updateCategory(id, dto.name);
         } catch (Exception e) {
             throw wrapException(e);
         }
-
     }
 
     @Override
     public void deleteCategory(Long id) {
-        if (!categoryEJB.isPresent(id)) {
-            throw new WebApplicationException("Cannot find news with id: " + id, 404);
+        if (!categoryEJB.isCategoryPresent(id)) {
+            throw new WebApplicationException("Cannot find category with id: " + id, 404);
         }
         categoryEJB.delete(id);
     }
