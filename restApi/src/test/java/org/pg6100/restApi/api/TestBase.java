@@ -5,12 +5,8 @@ import io.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.pg6100.quiz.entity.Question;
 import org.pg6100.restApi.api.util.JBossUtil;
 import org.pg6100.restApi.dto.CategoryDto;
-import org.pg6100.restApi.dto.QuestionDto;
-import org.pg6100.restApi.dto.SubCategoryDto;
-import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import java.util.Arrays;
 import java.util.List;

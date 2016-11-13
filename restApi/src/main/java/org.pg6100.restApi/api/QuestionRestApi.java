@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.jaxrs.PATCH;
 import org.pg6100.restApi.dto.QuestionDto;
 
 import javax.ws.rs.*;
@@ -51,9 +52,17 @@ public interface QuestionRestApi {
             @ApiParam("Question to replace the old one")
                     QuestionDto dto);
 
-
     //PATCH ID /id/{id}
-
+    @ApiOperation("Modify the text if a Question")
+    @Path("/id/{id}")
+    @PATCH
+    @Consumes(MediaType.TEXT_PLAIN)
+    void patchQuestionText(
+            @ApiParam("The unique id of a question")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("New question text")
+                    String text);
 
     @ApiOperation("Delete a question with the given id")
     @DELETE

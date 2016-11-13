@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.jaxrs.PATCH;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 
@@ -31,15 +32,6 @@ public interface SubCategoryRestApi {
             @ApiParam("Name of new sub category and parent category")
                     SubCategoryDto dto);
 
-    //GET all subcategories with the given parent specified by id
-    @ApiOperation("Get all sub categories for a given category")
-    @GET
-    @Path("/parent/{id}")
-    List<SubCategoryDto> getSubCategories(
-            @ApiParam("Name of parent category")
-            @PathParam("id")
-                    Long category);
-
     @ApiOperation("Get specified sub category by id")
     @GET
     @Path("/id/{id}")
@@ -59,10 +51,17 @@ public interface SubCategoryRestApi {
             @ApiParam("The sub category that will replace the old one")
                     SubCategoryDto dto);
 
-
     //PATCH ID /id/{id}
-
-
+    @ApiOperation("Modify the name of a sub category")
+    @Path("/id/{id}")
+    @PATCH
+    @Consumes(MediaType.TEXT_PLAIN)
+    void patchSubCategoryName(
+            @ApiParam("The unique id of a sub category")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("New sub category name")
+                    String name);
 
     @ApiOperation("Delete the sub category with the given id")
     @DELETE
@@ -71,6 +70,15 @@ public interface SubCategoryRestApi {
             @ApiParam("Id of sub category")
             @PathParam("id")
                     Long id);
+
+    //GET all subcategories with the given parent specified by id
+    @ApiOperation("Get all sub categories for a given category")
+    @GET
+    @Path("/parent/{id}")
+    List<SubCategoryDto> getSubCategories(
+            @ApiParam("Name of parent category")
+            @PathParam("id")
+                    Long category);
 
     //GET all subsubcategories of the subcategory specified by id
     @ApiOperation("Get all sub sub categories for a sub category")

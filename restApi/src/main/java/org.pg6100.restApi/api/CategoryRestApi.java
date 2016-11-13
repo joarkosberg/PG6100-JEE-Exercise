@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.jaxrs.PATCH;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
@@ -53,11 +54,17 @@ public interface CategoryRestApi {
             @ApiParam("The category that will replace the old one")
                     CategoryDto dto);
 
-
-
     //PATCH ID /id/{id}
-
-
+    @ApiOperation("Modify the name of a category")
+    @Path("/id/{id}")
+    @PATCH
+    @Consumes(MediaType.TEXT_PLAIN) // could have had a custom type here, but then would need unmarshaller for it
+    void patchCategoryName(
+                    @ApiParam("The unique id of a category")
+                    @PathParam("id")
+                            Long id,
+                    @ApiParam("New category name")
+                            String text);
 
     @ApiOperation("Delete a category with the given id")
     @DELETE

@@ -64,6 +64,18 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
     }
 
     @Override
+    public void patchSubSubCategoryParent(Long id, Long parentId) {
+        if(!categoryEJB.isSubSubCategoryPresent(id))
+            throw new WebApplicationException("Cannot find sub sub category with id: " + id, 404);
+
+        if(!categoryEJB.isSubCategoryPresent(parentId))
+            throw new WebApplicationException("Cannot find parent sub category with id: " + id, 404);
+
+        categoryEJB.updateSubSubCategory(id, categoryEJB.getSubSubCategory(id).getName(),
+                categoryEJB.getSubCategory(parentId));
+    }
+
+    @Override
     public void deleteSubSubCategory(Long id) {
         if (!categoryEJB.isSubSubCategoryPresent(id)) {
             throw new WebApplicationException("Cannot find sub sub category with id: " + id, 404);

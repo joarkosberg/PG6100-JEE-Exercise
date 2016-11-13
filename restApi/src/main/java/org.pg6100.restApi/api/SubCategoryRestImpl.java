@@ -2,6 +2,7 @@ package org.pg6100.restApi.api;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
@@ -61,6 +62,17 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
         } catch (Exception e) {
             throw wrapException(e);
         }
+    }
+
+    @Override
+    public void patchSubCategoryName(Long id, String name) {
+        if(!categoryEJB.isSubCategoryPresent(id))
+            throw new WebApplicationException("Cannot find sub category with id: " + id, 404);
+
+        if(Strings.isNullOrEmpty(name))
+            throw new WebApplicationException("Must specify a new sub category name!", 400);
+
+        categoryEJB.updateSubCategory(id, name, categoryEJB.getSubCategory(id).getCategory());
     }
 
     @Override

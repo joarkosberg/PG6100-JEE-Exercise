@@ -2,8 +2,10 @@ package org.pg6100.restApi.api;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.ejb.QuestionEJB;
+import org.pg6100.quiz.entity.Question;
 import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.converter.QuestionConverter;
 
@@ -77,6 +79,19 @@ public class QuestionRestImpl implements QuestionRestApi {
         } catch (Exception e) {
             throw wrapException(e);
         }
+    }
+
+    @Override
+    public void patchQuestionText(Long id, String text) {
+        if(!questionEJB.isPresent(id))
+            throw new WebApplicationException("Cannot find question with id: " + id, 404);
+
+        if(Strings.isNullOrEmpty(text))
+            throw new WebApplicationException("Must specify a new question text!", 400);
+
+        Question question = questionEJB.getQuestion(id);
+        questionEJB.updateQuestion(id, question.getSubSubCategory().getId(), text,
+                question.getAnswers(), question.getCorrectAnswer());
     }
 
     @Override

@@ -36,9 +36,8 @@ public class CategoryRestImpl implements CategoryRestApi {
     public Long createCategory(CategoryDto dto) {
         if(!Strings.isNullOrEmpty(dto.id))
             throw new WebApplicationException("Cannot specify id for a newly generated categories", 400);
-        if(Strings.isNullOrEmpty(dto.name)){
+        if(Strings.isNullOrEmpty(dto.name))
             throw new WebApplicationException("Must specify name for category", 400);
-        }
 
         Long name;
         try{
@@ -77,6 +76,17 @@ public class CategoryRestImpl implements CategoryRestApi {
         } catch (Exception e) {
             throw wrapException(e);
         }
+    }
+
+    @Override
+    public void patchCategoryName(Long id, String name) {
+        if(!categoryEJB.isCategoryPresent(id))
+            throw new WebApplicationException("Cannot find category with id: " + id, 404);
+
+        if(Strings.isNullOrEmpty(name))
+            throw new WebApplicationException("Must specify a new category name!", 400);
+
+        categoryEJB.updateCategory(id, name);
     }
 
     @Override
