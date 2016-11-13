@@ -2,10 +2,17 @@ package org.pg6100.restApi.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.entity.SubCategory;
+import org.pg6100.quiz.entity.SubSubCategory;
+
+import javax.ejb.EJB;
 
 @ApiModel("Subcategory of the subcategory")
 public class SubSubCategoryDto {
+
+    @EJB
+    private CategoryEJB categoryEJB;
 
     @ApiModelProperty("Id of the category")
     public String id;

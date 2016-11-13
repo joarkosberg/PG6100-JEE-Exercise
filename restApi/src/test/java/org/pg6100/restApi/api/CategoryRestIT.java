@@ -2,6 +2,7 @@ package org.pg6100.restApi.api;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
@@ -12,8 +13,8 @@ import static org.hamcrest.core.Is.is;
 
 public class CategoryRestIT extends TestBase {
 
-    @BeforeClass
-    public static void before(){
+    @Before
+    public void setBasePath(){ // Used to change after each clean between methods
         RestAssured.basePath = categoryRest;
     }
 
