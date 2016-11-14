@@ -178,7 +178,7 @@ public class CategoryEJB {
     }
 
     public boolean isSubSubCategoryPresent(Long id){
-        return em.find(SubCategory.class, id) != null;
+        return em.find(SubSubCategory.class, id) != null;
     }
 
     public boolean updateSubSubCategory(@NotNull Long id, @NotNull String name, @NotNull Long subCategoryId){

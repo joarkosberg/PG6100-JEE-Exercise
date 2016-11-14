@@ -24,9 +24,6 @@ public class QuestionRestImpl implements QuestionRestApi {
     @EJB
     private QuestionEJB questionEJB;
 
-    @EJB
-    private CategoryEJB categoryEJB;
-
     @Override
     public List<QuestionDto> getAllQuestions() {
         return QuestionConverter.transform(questionEJB.getAllQuestions());
