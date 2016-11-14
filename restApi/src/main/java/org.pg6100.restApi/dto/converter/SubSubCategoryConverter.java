@@ -16,7 +16,7 @@ public class SubSubCategoryConverter {
         SubSubCategoryDto dto = new SubSubCategoryDto();
         dto.id = String.valueOf(entity.getId());
         dto.name = entity.getName();
-        dto.subCategory = entity.getSubCategory();
+        dto.subCategory = SubCategoryConverter.transform(entity.getSubCategory());
         return dto;
     }
 

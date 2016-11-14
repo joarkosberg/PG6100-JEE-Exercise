@@ -57,7 +57,7 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
                     "and cannot find sub sub category with id: " + dtoID, 404);
 
         try {
-            categoryEJB.updateSubSubCategory(id, dto.name, dto.subCategory);
+            categoryEJB.updateSubSubCategory(id, dto.name, Long.valueOf(dto.subCategory.id));
         } catch (Exception e) {
             throw wrapException(e);
         }
@@ -71,8 +71,7 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
         if(!categoryEJB.isSubCategoryPresent(parentId))
             throw new WebApplicationException("Cannot find parent sub category with id: " + id, 404);
 
-        categoryEJB.updateSubSubCategory(id, categoryEJB.getSubSubCategory(id).getName(),
-                categoryEJB.getSubCategory(parentId));
+        categoryEJB.updateSubSubCategory(id, categoryEJB.getSubSubCategory(id).getName(), parentId);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
 
         Long id;
         try{
-            id = categoryEJB.createNewSubSubCategory(dto.name, dto.subCategory.getId());
+            id = categoryEJB.createNewSubSubCategory(dto.name, Long.valueOf(dto.subCategory.id));
         }catch (Exception e){
             throw wrapException(e);
         }

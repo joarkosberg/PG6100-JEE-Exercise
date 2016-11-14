@@ -97,10 +97,10 @@ public class CategoryEJBTest extends EJBTestBase {
         assertTrue(categoryEJB.updateCategory(category, newName));
         assertEquals(newName, categoryEJB.getCategory(category).getName());
 
-        assertTrue(categoryEJB.updateSubCategory(subCategory, newName, categoryEJB.getCategory(category)));
+        assertTrue(categoryEJB.updateSubCategory(subCategory, newName, category));
         assertEquals(newName, categoryEJB.getSubCategory(subCategory).getName());
 
-        assertTrue(categoryEJB.updateSubSubCategory(subSubCategory, newName, categoryEJB.getSubCategory(subCategory)));
+        assertTrue(categoryEJB.updateSubSubCategory(subSubCategory, newName, subCategory));
         assertEquals(newName, categoryEJB.getSubSubCategory(subSubCategory).getName());
     }
 

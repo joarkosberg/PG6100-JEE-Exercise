@@ -117,13 +117,13 @@ public class CategoryEJB {
         return em.find(SubCategory.class, id) != null;
     }
 
-    public boolean updateSubCategory(@NotNull Long id, @NotNull String name, @NotNull Category category){
+    public boolean updateSubCategory(@NotNull Long id, @NotNull String name, @NotNull Long categoryId){
         SubCategory c = em.find(SubCategory.class, id);
         if(c == null)
             return false;
 
         c.setName(name);
-        c.setCategory(category);
+        c.setCategory(getCategory(categoryId));
         return true;
     }
 
@@ -181,13 +181,13 @@ public class CategoryEJB {
         return em.find(SubCategory.class, id) != null;
     }
 
-    public boolean updateSubSubCategory(@NotNull Long id, @NotNull String name, @NotNull SubCategory subCategory){
+    public boolean updateSubSubCategory(@NotNull Long id, @NotNull String name, @NotNull Long subCategoryId){
         SubSubCategory c = em.find(SubSubCategory.class, id);
         if(c == null)
             return false;
 
         c.setName(name);
-        c.setSubCategory(subCategory);
+        c.setSubCategory(getSubCategory(subCategoryId));
         return true;
     }
 

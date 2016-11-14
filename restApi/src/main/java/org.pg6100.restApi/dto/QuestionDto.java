@@ -27,11 +27,11 @@ public class QuestionDto {
     public Integer correctAnswer;
 
     @ApiModelProperty("Category which the question belong to")
-    public SubSubCategory subSubCategory;
+    public SubSubCategoryDto subSubCategory;
 
     public QuestionDto(){}
 
-    public QuestionDto(String id, String question, List<String> answers, Integer correctAnswer, SubSubCategory subSubCategory) {
+    public QuestionDto(String id, String question, List<String> answers, Integer correctAnswer, SubSubCategoryDto subSubCategory) {
         this.id = id;
         this.question = question;
         this.answers = answers;

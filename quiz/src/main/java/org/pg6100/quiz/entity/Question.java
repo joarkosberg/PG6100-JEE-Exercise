@@ -27,7 +27,7 @@ public class Question {
     @NotBlank
     private String question;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> answers;
 
     @NotNull

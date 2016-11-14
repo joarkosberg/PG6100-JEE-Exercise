@@ -1,6 +1,7 @@
 package org.pg6100.restApi.dto.converter;
 
 import org.pg6100.quiz.entity.Question;
+import org.pg6100.quiz.entity.SubSubCategory;
 import org.pg6100.restApi.dto.QuestionDto;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class QuestionConverter {
         dto.question = entity.getQuestion();
         dto.answers = entity.getAnswers();
         dto.correctAnswer = entity.getCorrectAnswer();
-        dto.subSubCategory = entity.getSubSubCategory();
+        dto.subSubCategory = SubSubCategoryConverter.transform(entity.getSubSubCategory());
         return dto;
     }
 

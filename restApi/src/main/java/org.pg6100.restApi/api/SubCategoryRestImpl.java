@@ -58,7 +58,7 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
                     "and cannot find sub category with id: " + dtoID, 404);
 
         try {
-            categoryEJB.updateSubCategory(id, dto.name, dto.category);
+            categoryEJB.updateSubCategory(id, dto.name, Long.valueOf(dto.category.id));
         } catch (Exception e) {
             throw wrapException(e);
         }
@@ -72,7 +72,7 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
         if(Strings.isNullOrEmpty(name))
             throw new WebApplicationException("Must specify a new sub category name!", 400);
 
-        categoryEJB.updateSubCategory(id, name, categoryEJB.getSubCategory(id).getCategory());
+        categoryEJB.updateSubCategory(id, name, id);
     }
 
     @Override
@@ -98,7 +98,9 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
 
         Long id;
         try{
-            id = categoryEJB.createNewSubCategory(dto.name, dto.category.getId());
+            System.out.println(Long.valueOf(dto.category.id) + " ID");
+            System.out.println(dto.name + " NAME");
+            id = categoryEJB.createNewSubCategory(dto.name, Long.valueOf(dto.category.id));
         }catch (Exception e){
             throw wrapException(e);
         }

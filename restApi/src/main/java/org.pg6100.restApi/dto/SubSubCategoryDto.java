@@ -21,11 +21,11 @@ public class SubSubCategoryDto {
     public String name;
 
     @ApiModelProperty("Parent category")
-    public SubCategory subCategory;
+    public SubCategoryDto subCategory;
 
     public SubSubCategoryDto(){}
 
-    public SubSubCategoryDto(String id, String name, SubCategory subCategory) {
+    public SubSubCategoryDto(String id, String name, SubCategoryDto subCategory) {
         this.id = id;
         this.name = name;
         this.subCategory = subCategory;

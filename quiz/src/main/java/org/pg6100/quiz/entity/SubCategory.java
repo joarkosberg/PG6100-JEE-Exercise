@@ -5,8 +5,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = SubCategory.GET_ALL_SUB_CATEGORIES, query =
                 "select c " +
-                        "from SubCategory c " +
-                        "where TYPE(c) = SubCategory"),
+                        "from SubCategory c"),
         @NamedQuery(name = SubCategory.GET_SUB_CATEGORIES, query =
                 "select c " +
                         "from SubCategory c " +

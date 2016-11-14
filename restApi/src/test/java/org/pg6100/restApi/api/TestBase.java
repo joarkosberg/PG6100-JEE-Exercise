@@ -49,7 +49,6 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().as(QuestionDto[].class));
-
         questions.stream().forEach(dto ->
                 given().pathParam("id", dto.id)
                         .delete("/id/{id}")
@@ -63,9 +62,8 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().as(SubSubCategoryDto[].class));
-
-        subSubCategories.stream().forEach(dto ->
-                given().pathParam("id", dto.id)
+        subSubCategories.stream().forEach(subSub ->
+                given().pathParam("id", subSub.id)
                         .delete("/id/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
@@ -77,7 +75,6 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().as(SubCategoryDto[].class));
-
         subCategories.stream().forEach(dto ->
                 given().pathParam("id", dto.id)
                         .delete("/id/{id}")
@@ -122,11 +119,10 @@ public class TestBase {
         return id;
     }
 
-    public String createSubSubCategory(String subSubCategoryName, String subCategoryId, String path){
+    public String createSubSubCategory(SubSubCategoryDto subSubCategoryDto, String path){
         RestAssured.basePath = subSubCategoryRest;
-        Long subId = Long.valueOf(subCategoryId);
         String id = given().contentType(ContentType.JSON)
-                .body(new SubSubCategoryDto(null, "Name", new SubCategory()))
+                .body(subSubCategoryDto)
                 .post()
                 .then()
                 .statusCode(200)

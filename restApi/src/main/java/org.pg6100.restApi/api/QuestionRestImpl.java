@@ -43,7 +43,7 @@ public class QuestionRestImpl implements QuestionRestApi {
 
         Long id;
         try{
-            id = questionEJB.createQuestion(dto.subSubCategory.getId(), dto.question, dto.answers, dto.correctAnswer);
+            id = questionEJB.createQuestion(Long.valueOf(dto.subSubCategory.id), dto.question, dto.answers, dto.correctAnswer);
         }catch (Exception e){
             throw wrapException(e);
         }
@@ -75,7 +75,7 @@ public class QuestionRestImpl implements QuestionRestApi {
                     "and cannot find question with id: " + id, 404);
 
         try {
-            questionEJB.updateQuestion(id, dto.subSubCategory.getId(), dto.question, dto.answers, dto.correctAnswer);
+            questionEJB.updateQuestion(id, Long.valueOf(dto.subSubCategory.id), dto.question, dto.answers, dto.correctAnswer);
         } catch (Exception e) {
             throw wrapException(e);
         }

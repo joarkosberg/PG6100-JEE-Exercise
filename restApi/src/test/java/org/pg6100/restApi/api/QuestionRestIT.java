@@ -8,6 +8,7 @@ import org.pg6100.quiz.entity.SubSubCategory;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
+import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -21,16 +22,20 @@ public class QuestionRestIT extends TestBase {
     }
 
     @Test
-    public void testCreateAndGetCategory() {
+    public void testCreateAndGetQuestion() {
         CategoryDto category = new CategoryDto(null, "cat");
-        String categoryId = createCategory(category, questionRest);
-        String subCategoryId = createSubCategory(new SubCategoryDto(), questionRest);
-        String subSubCategoryId = createSubSubCategory("ssCat", subCategoryId, questionRest);
+        category.id = createCategory(category, questionRest);
+
+        SubCategoryDto subCategory = new SubCategoryDto(null, "sub", category);
+        subCategory.id = createSubCategory(subCategory, questionRest);
+
+        SubSubCategoryDto subSubCategory = new SubSubCategoryDto(null, "subsub", subCategory);
+        subSubCategory.id = createSubSubCategory(subSubCategory, questionRest);
+        System.out.println(subCategory.id);
 
         get().then().statusCode(200).body("size()", is(0));
-
         given().contentType(ContentType.JSON)
-                .body(new QuestionDto(null, "question", answers, 3, new SubSubCategory()))
+                .body(new QuestionDto(null, "question", answers, 3, subSubCategory))
                 .post()
                 .then()
                 .statusCode(200)
