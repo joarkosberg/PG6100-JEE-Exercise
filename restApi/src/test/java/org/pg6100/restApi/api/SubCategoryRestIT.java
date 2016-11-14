@@ -36,4 +36,13 @@ public class SubCategoryRestIT extends TestBase {
         get().then().statusCode(200).body("size()", is(1));
     }
 
+    //TODO MORE THAN ONE
+
+    //TODO PATCH
+
+    //TODO PUT
+
+    //TODO @Path("/parent/{id}")
+
+    //TODO @Path("/id/{id}/subsubcategories")
 }

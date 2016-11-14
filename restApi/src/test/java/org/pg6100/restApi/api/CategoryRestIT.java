@@ -24,7 +24,9 @@ public class CategoryRestIT extends TestBase {
         String category = "c1";
         CategoryDto dto = new CategoryDto(null, category);
 
-        get().then().statusCode(200).body("size()", is(0));
+        get().then()
+                .statusCode(200)
+                .body("size()", is(0));
 
         given().contentType(ContentType.JSON)
                 .body(dto)
@@ -33,17 +35,21 @@ public class CategoryRestIT extends TestBase {
                 .statusCode(200)
                 .extract();
 
-        get().then().statusCode(200).body("size()", is(1));
+        get().then()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 
     @Test
-    public void testUpdateCategory() throws Exception {
+    public void testUpdateCategory() {
         //first create with a POST
         String text = "cat";
         String id = createCategory(new CategoryDto(null, text));
 
         //check if POST was fine
-        get("/id/" + id).then().body("name", is(text));
+        get("/id/" + id)
+                .then()
+                .body("name", is(text));
 
         //now change text with PUT
         String updatedText = "new updated categoryname";
@@ -55,20 +61,47 @@ public class CategoryRestIT extends TestBase {
                 .statusCode(204);
 
         //was the PUT fine?
-        get().then().statusCode(200).body("size()", is(1));
-        get("/id/" + id).then().body("name", is(updatedText));
+        get().then()
+                .statusCode(200)
+                .body("size()", is(1));
+        get("/id/" + id)
+                .then()
+                .body("name", is(updatedText));
     }
 
     //Patch category
+    @Test
+    public void testPatchCategory() {
+        //Create
+        String categoryName = "cat";
+        CategoryDto categoryDto = new CategoryDto(null, categoryName);
+        categoryDto.id = createCategory(categoryDto);
+
+        get("/id/" + categoryDto.id)
+                .then()
+                .body("name", is(categoryName));
+
+        //Patch
+        String newName = "newCat";
+        given().contentType(ContentType.TEXT)
+                .pathParam("id", categoryDto.id)
+                .body(newName)
+                .patch("/id/{id}")
+                .then()
+                .statusCode(204);
+
+        get("/id/" + categoryDto.id)
+                .then()
+                .body("name", is(newName));
+    }
+
+    //TODO MORE THAN ONE
+
+    //TODO @Path("/withQuizzes")
 
 
-    //@Path("/withQuizzes")
+    //TODO @Path("/withQuizzes/subsubcategories")
 
 
-
-    //@Path("/withQuizzes/subsubcategories")
-
-
-
-    //@Path("/id/{id}/subcategories")
+    //TODO @Path("/id/{id}/subcategories")
 }
