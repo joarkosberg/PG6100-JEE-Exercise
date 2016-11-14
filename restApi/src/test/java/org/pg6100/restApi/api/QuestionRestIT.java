@@ -33,7 +33,6 @@ public class QuestionRestIT extends TestBase {
 
         SubSubCategoryDto subSubCategory = new SubSubCategoryDto(null, "subsub", subCategory);
         subSubCategory.id = createSubSubCategory(subSubCategory);
-        System.out.println(subCategory.id);
 
         get().then().statusCode(200).body("size()", is(0));
         given().contentType(ContentType.JSON)

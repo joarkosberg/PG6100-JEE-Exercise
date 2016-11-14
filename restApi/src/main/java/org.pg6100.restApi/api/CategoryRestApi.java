@@ -77,13 +77,13 @@ public interface CategoryRestApi {
     //GET all categories that have at least one subcategory with at least one subsubcategory with at least one quiz.
     @ApiOperation("Get all categories with at least one sub category with at least one sub sub category with at least one question")
     @GET
-    @Path("/withQuizzes")
+    @Path("/withquizzes")
     List<CategoryDto> getCategoriesWithQuizzes();
 
     //GET all subsubcategories with at least one quiz
     @ApiOperation("Get all sub sub categories with at least one question")
     @GET
-    @Path("/withQuizzes/subsubcategories")
+    @Path("/withquizzes/subsubcategories")
     List<SubSubCategoryDto> getSubSubCategoriesWithQuizzes();
 
     //GET all subcategories of the category specified by id
