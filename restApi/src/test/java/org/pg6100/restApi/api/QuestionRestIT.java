@@ -3,6 +3,7 @@ package org.pg6100.restApi.api;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pg6100.quiz.entity.SubSubCategory;
 import org.pg6100.restApi.dto.CategoryDto;
@@ -16,21 +17,22 @@ import static org.hamcrest.core.Is.is;
 
 public class QuestionRestIT extends TestBase {
 
-    @Before
-    public void setBasePath(){ // Used to change after each clean between methods
-        RestAssured.basePath = questionRest;
+    @BeforeClass
+    public static void setActivePath(){
+        activeRest = questionRest;
+        RestAssured.basePath = activeRest;
     }
 
     @Test
     public void testCreateAndGetQuestion() {
         CategoryDto category = new CategoryDto(null, "cat");
-        category.id = createCategory(category, questionRest);
+        category.id = createCategory(category);
 
         SubCategoryDto subCategory = new SubCategoryDto(null, "sub", category);
-        subCategory.id = createSubCategory(subCategory, questionRest);
+        subCategory.id = createSubCategory(subCategory);
 
         SubSubCategoryDto subSubCategory = new SubSubCategoryDto(null, "subsub", subCategory);
-        subSubCategory.id = createSubSubCategory(subSubCategory, questionRest);
+        subSubCategory.id = createSubSubCategory(subSubCategory);
         System.out.println(subCategory.id);
 
         get().then().statusCode(200).body("size()", is(0));

@@ -13,9 +13,10 @@ import static org.hamcrest.core.Is.is;
 
 public class CategoryRestIT extends TestBase {
 
-    @Before
-    public void setBasePath(){ // Used to change after each clean between methods
-        RestAssured.basePath = categoryRest;
+    @BeforeClass
+    public static void setBasePath(){
+        activeRest = categoryRest;
+        RestAssured.basePath = activeRest;
     }
 
     @Test
@@ -39,19 +40,13 @@ public class CategoryRestIT extends TestBase {
     public void testUpdateCategory() throws Exception {
         //first create with a POST
         String text = "cat";
-        String id = given().contentType(ContentType.JSON)
-                .body(new CategoryDto(null, text))
-                .post()
-                .then()
-                .statusCode(200)
-                .extract().asString();
+        String id = createCategory(new CategoryDto(null, text));
 
         //check if POST was fine
         get("/id/" + id).then().body("name", is(text));
 
-        String updatedText = "new updated categoryname";
-
         //now change text with PUT
+        String updatedText = "new updated categoryname";
         given().contentType(ContentType.JSON)
                 .pathParam("id", id)
                 .body(new CategoryDto(id, updatedText))
@@ -63,4 +58,17 @@ public class CategoryRestIT extends TestBase {
         get().then().statusCode(200).body("size()", is(1));
         get("/id/" + id).then().body("name", is(updatedText));
     }
+
+    //Patch category
+
+
+    //@Path("/withQuizzes")
+
+
+
+    //@Path("/withQuizzes/subsubcategories")
+
+
+
+    //@Path("/id/{id}/subcategories")
 }

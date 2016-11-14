@@ -27,6 +27,8 @@ public class TestBase {
     protected final static String subCategoryRest = "/quiz/api/subcategories";
     protected final static String categoryRest = "quiz/api/categories";
 
+    protected static String activeRest;
+
     protected List<String> answers = Arrays.asList("a1", "a2", "a3", "a4");
 
     @BeforeClass
@@ -93,9 +95,11 @@ public class TestBase {
                         .delete("/id/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
+
+        RestAssured.basePath = activeRest;
     }
 
-    public String createCategory(CategoryDto categoryDto, String path){
+    public String createCategory(CategoryDto categoryDto){
         RestAssured.basePath = categoryRest;
         String id = given().contentType(ContentType.JSON)
                 .body(categoryDto)
@@ -103,11 +107,11 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().asString();
-        RestAssured.basePath = path;
+        RestAssured.basePath = activeRest;
         return id;
     }
 
-    public String createSubCategory(SubCategoryDto subCategoryDto, String path){
+    public String createSubCategory(SubCategoryDto subCategoryDto){
         RestAssured.basePath = subCategoryRest;
         String id = given().contentType(ContentType.JSON)
                 .body(subCategoryDto)
@@ -115,11 +119,11 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().asString();
-        RestAssured.basePath = path;
+        RestAssured.basePath = activeRest;
         return id;
     }
 
-    public String createSubSubCategory(SubSubCategoryDto subSubCategoryDto, String path){
+    public String createSubSubCategory(SubSubCategoryDto subSubCategoryDto){
         RestAssured.basePath = subSubCategoryRest;
         String id = given().contentType(ContentType.JSON)
                 .body(subSubCategoryDto)
@@ -127,7 +131,19 @@ public class TestBase {
                 .then()
                 .statusCode(200)
                 .extract().asString();
-        RestAssured.basePath = path;
+        RestAssured.basePath = activeRest;
+        return id;
+    }
+
+    public String createQuestion(QuestionDto questionDto){
+        RestAssured.basePath = questionRest;
+        String id = given().contentType(ContentType.JSON)
+                .body(questionDto)
+                .post()
+                .then()
+                .statusCode(200)
+                .extract().asString();
+        RestAssured.basePath = activeRest;
         return id;
     }
 }
