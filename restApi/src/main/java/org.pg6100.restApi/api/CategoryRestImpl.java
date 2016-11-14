@@ -2,9 +2,7 @@ package org.pg6100.restApi.api;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
-import org.pg6100.quiz.entity.Category;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.CategoryConverter;

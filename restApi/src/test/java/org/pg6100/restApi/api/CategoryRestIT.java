@@ -83,7 +83,7 @@ public class CategoryRestIT extends TestBase {
 
     //Patch category
     @Test
-    public void testPatchCategory() {
+    public void testPatchCategoryName() {
         //Create
         String categoryName = "cat";
         CategoryDto categoryDto = new CategoryDto(null, categoryName);
@@ -239,4 +239,9 @@ public class CategoryRestIT extends TestBase {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+
+
+
+    //TODO test invalid requests.
 }

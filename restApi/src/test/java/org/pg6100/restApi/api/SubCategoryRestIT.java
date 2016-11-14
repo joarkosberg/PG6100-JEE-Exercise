@@ -3,6 +3,7 @@ package org.pg6100.restApi.api;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
@@ -36,13 +37,68 @@ public class SubCategoryRestIT extends TestBase {
         get().then().statusCode(200).body("size()", is(1));
     }
 
-    //TODO MORE THAN ONE
+    @Test
+    public void testUpdateSubCategory(){
+        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        categoryDto.id = createCategory(categoryDto);
 
-    //TODO PATCH
+        String name = "sub";
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto);
+        subCategoryDto.id = createSubCategory(subCategoryDto);
 
-    //TODO PUT
+        get("/id/" + subCategoryDto.id)
+                .then()
+                .body("name", is(name));
+
+        //Put
+        String newName = "newSub";
+        subCategoryDto.name = newName;
+        given().contentType(ContentType.JSON)
+                .pathParam("id", subCategoryDto.id)
+                .body(subCategoryDto)
+                .put("/id/{id}")
+                .then()
+                .statusCode(204);
+
+        get("/id/" + subCategoryDto.id)
+                .then()
+                .body("name", is(newName));
+    }
+
+    @Test
+    public void testPatchSubCategoryName() {
+        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        categoryDto.id = createCategory(categoryDto);
+
+        String name = "sub";
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto);
+        subCategoryDto.id = createSubCategory(subCategoryDto);
+
+        get("/id/" + subCategoryDto.id)
+                .then()
+                .body("name", is(name));
+
+        //Patch
+        String newName = "newSub";
+        given().contentType(ContentType.TEXT)
+                .pathParam("id", subCategoryDto.id)
+                .body(newName)
+                .patch("/id/{id}")
+                .then()
+                .statusCode(204);
+
+        get("/id/" + subCategoryDto.id)
+                .then()
+                .body("name", is(newName));
+    }
+
+
 
     //TODO @Path("/parent/{id}")
 
     //TODO @Path("/id/{id}/subsubcategories")
+
+
+    //TODO MORE THAN ONE
+    //TODO test invalid requests.
 }

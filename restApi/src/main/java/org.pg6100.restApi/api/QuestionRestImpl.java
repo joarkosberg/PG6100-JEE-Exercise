@@ -2,8 +2,6 @@ package org.pg6100.restApi.api;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import io.swagger.annotations.ApiParam;
-import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.ejb.QuestionEJB;
 import org.pg6100.quiz.entity.Question;
 import org.pg6100.restApi.dto.QuestionDto;
@@ -65,7 +63,7 @@ public class QuestionRestImpl implements QuestionRestApi {
             throw new WebApplicationException("Invalid id: " + dto.id, 400);
         }
 
-        if (dtoID != id)
+        if (!dtoID.equals(id))
             throw new WebApplicationException("Not allowed to change the id of the resource", 409);
         if (!questionEJB.isPresent(id))
             throw new WebApplicationException("Not allowed to create a question with PUT, " +

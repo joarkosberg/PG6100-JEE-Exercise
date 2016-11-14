@@ -121,9 +121,16 @@ public class CategoryEJB {
         SubCategory c = em.find(SubCategory.class, id);
         if(c == null)
             return false;
-
         c.setName(name);
         c.setCategory(getCategory(categoryId));
+        return true;
+    }
+
+    public boolean updateSubCategoryName(@NotNull Long id, @NotNull String name){
+        SubCategory c = em.find(SubCategory.class, id);
+        if(c == null)
+            return false;
+        c.setName(name);
         return true;
     }
 
@@ -139,7 +146,6 @@ public class CategoryEJB {
         SubSubCategory subSubCategory = new SubSubCategory();
         subSubCategory.setName(name);
         subSubCategory.setSubCategory(subCategory);
-
         em.persist(subSubCategory);
 
         return subSubCategory.getId();
@@ -188,6 +194,7 @@ public class CategoryEJB {
 
         c.setName(name);
         c.setSubCategory(getSubCategory(subCategoryId));
+
         return true;
     }
 

@@ -26,12 +26,4 @@ public class CategoryConverter {
                 .map(CategoryConverter::transform)
                 .collect(Collectors.toList());
     }
-
-    public static Category deTransform(CategoryDto categoryDto){
-        Objects.requireNonNull(categoryDto);
-        Category category = new Category();
-        category.setId(Long.valueOf(categoryDto.id));
-        category.setName(categoryDto.name);
-        return category;
-    }
 }
