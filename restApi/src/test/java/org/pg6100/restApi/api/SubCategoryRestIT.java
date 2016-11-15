@@ -3,7 +3,6 @@ package org.pg6100.restApi.api;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;

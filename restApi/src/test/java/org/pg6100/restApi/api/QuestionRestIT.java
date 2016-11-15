@@ -2,11 +2,8 @@ package org.pg6100.restApi.api;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pg6100.quiz.entity.Question;
-import org.pg6100.quiz.entity.SubSubCategory;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.SubCategoryDto;

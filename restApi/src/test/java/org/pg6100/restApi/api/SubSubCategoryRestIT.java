@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
