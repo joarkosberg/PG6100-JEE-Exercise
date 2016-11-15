@@ -1,8 +1,9 @@
-package org.pg6100.restApi.api;
+package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.restApi.api.SubCategoryRestApi;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.SubCategoryConverter;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class SubCategoryRestImpl implements SubCategoryRestApi{
+public class SubCategoryRestImpl implements SubCategoryRestApi {
 
     @EJB
     private CategoryEJB categoryEJB;
@@ -52,7 +53,7 @@ public class SubCategoryRestImpl implements SubCategoryRestApi{
 
         if (!dtoID.equals(id))
             throw new WebApplicationException("Not allowed to change the id of the resource", 409);
-        if (!categoryEJB.isSubCategoryPresent(id))
+        if (!categoryEJB.isSubCategoryPresent(id)) //Will probably never get hit.
             throw new WebApplicationException("Not allowed to create a sub category with PUT, " +
                     "and cannot find sub category with id: " + dtoID, 404);
 

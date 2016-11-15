@@ -12,6 +12,8 @@ import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 
+import java.util.Arrays;
+
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
@@ -99,12 +101,16 @@ public class QuestionRestIT extends TestBase {
                 .body("question", is(newQuestion));
     }
 
+    @Test
+    public void testCreateQuestionWithInvalidCountOfAnswers(){
+        SubSubCategoryDto subSubCategoryDto = createAndGetSubSubCategory();
 
-
-    //TODO test invalid requests.
-    //TODO MORE THAN ONE
-
-
+        given().contentType(ContentType.JSON)
+                .body(new QuestionDto(null, "question", Arrays.asList(new String[]{"sd2", "asd21", "21d"}), 1, subSubCategoryDto))
+                .post()
+                .then()
+                .statusCode(400);
+    }
 
     public SubSubCategoryDto createAndGetSubSubCategory(){
         CategoryDto category = new CategoryDto(null, "cat");

@@ -1,8 +1,9 @@
-package org.pg6100.restApi.api;
+package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.restApi.api.SubSubCategoryRestApi;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.SubSubCategoryConverter;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class SubSubCategoryRestImpl implements SubSubCategoryRestApi{
+public class SubSubCategoryRestImpl implements SubSubCategoryRestApi {
 
     @EJB
     private CategoryEJB categoryEJB;

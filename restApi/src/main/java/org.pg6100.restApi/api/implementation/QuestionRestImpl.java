@@ -1,9 +1,10 @@
-package org.pg6100.restApi.api;
+package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.quiz.ejb.QuestionEJB;
 import org.pg6100.quiz.entity.Question;
+import org.pg6100.restApi.api.QuestionRestApi;
 import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.converter.QuestionConverter;
 

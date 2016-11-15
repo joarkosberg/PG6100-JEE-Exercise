@@ -240,8 +240,29 @@ public class CategoryRestIT extends TestBase {
                 .body("size()", is(1));
     }
 
+    //Invalid requests 4**
+    @Test
+    public void testCreateWithSpecifiedId(){
+        given().contentType(ContentType.JSON)
+                .body(new CategoryDto("1", "name"))
+                .post()
+                .then()
+                .statusCode(400);
+    }
 
+    @Test
+    public void testCreateWithoutName(){
+        given().contentType(ContentType.JSON)
+                .body(new CategoryDto(null, null))
+                .post()
+                .then()
+                .statusCode(400);
+    }
 
-
-    //TODO test invalid requests.
+    @Test
+    public void testGetInvalidCategory(){
+        get("/id/" + "1")
+                .then()
+                .statusCode(404);
+    }
 }

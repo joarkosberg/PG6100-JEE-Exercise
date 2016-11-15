@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
+import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -92,13 +93,99 @@ public class SubCategoryRestIT extends TestBase {
                 .body("name", is(newName));
     }
 
+    //@Path("/parent/{id}")
+    @Test
+    public void testGetSubCategoriesOfParentCategory(){
+        CategoryDto categoryDto1 = new CategoryDto(null, "cat");
+        categoryDto1.id = createCategory(categoryDto1);
+        CategoryDto categoryDto2 = new CategoryDto(null, "cat");
+        categoryDto2.id = createCategory(categoryDto2);
+
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2));
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto1));
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2));
+
+        get("/parent/" + categoryDto1.id)
+                .then()
+                .body("size()", is(1));
+        get("/parent/" + categoryDto2.id)
+                .then()
+                .body("size()", is(2));
+    }
 
 
-    //TODO @Path("/parent/{id}")
+    //@Path("/id/{id}/subsubcategories")
+    @Test
+    public void testGetSubSubCategoriesOfSubCategory(){
+        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        categoryDto.id = createCategory(categoryDto);
 
-    //TODO @Path("/id/{id}/subsubcategories")
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        subCategoryDto1.id = createSubCategory(subCategoryDto1);
+        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub", categoryDto);
+        subCategoryDto2.id = createSubCategory(subCategoryDto2);
+        SubCategoryDto subCategoryDto3 = new SubCategoryDto(null, "sub", categoryDto);
+        subCategoryDto3.id = createSubCategory(subCategoryDto3);
+
+        createSubSubCategory(new SubSubCategoryDto(null, "subsub", subCategoryDto3));
+        createSubSubCategory(new SubSubCategoryDto(null, "subsub", subCategoryDto2));
+        createSubSubCategory(new SubSubCategoryDto(null, "subsub", subCategoryDto3));
+
+        given().pathParam("id", subCategoryDto1.id)
+                .get("/id/{id}/subsubcategories")
+                .then()
+                .body("size()", is(0));
+        given().pathParam("id", subCategoryDto2.id)
+                .get("/id/{id}/subsubcategories")
+                .then()
+                .body("size()", is(1));
+        given().pathParam("id", subCategoryDto3.id)
+                .get("/id/{id}/subsubcategories")
+                .then()
+                .body("size()", is(2));
+    }
 
 
-    //TODO MORE THAN ONE
-    //TODO test invalid requests.
+    //Invalid requests 4**
+    @Test
+    public void testUpdateWithIdNotLong(){
+        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        categoryDto.id = createCategory(categoryDto);
+
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        subCategoryDto1.id = createSubCategory(subCategoryDto1);
+
+        given().contentType(ContentType.JSON)
+                .pathParam("id", subCategoryDto1.id)
+                .body(new SubCategoryDto("hiNotANumber", "hei", new CategoryDto()))
+                .put("/id/{id}")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    public void testUpdateId(){
+        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        categoryDto.id = createCategory(categoryDto);
+
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        subCategoryDto1.id = createSubCategory(subCategoryDto1);
+
+        given().contentType(ContentType.JSON)
+                .pathParam("id", subCategoryDto1.id)
+                .body(new SubCategoryDto(subCategoryDto1.id + "2", "hei", new CategoryDto()))
+                .put("/id/{id}")
+                .then()
+                .statusCode(409);
+    }
+
+    @Test
+    public void testUpdateOfNonExistingSubCategory(){
+        given().contentType(ContentType.JSON)
+                .pathParam("id", "kappa")
+                .body(new SubCategoryDto())
+                .put("/id/{id}")
+                .then()
+                .statusCode(404);
+    }
 }

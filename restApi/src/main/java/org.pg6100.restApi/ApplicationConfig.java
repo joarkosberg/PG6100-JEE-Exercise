@@ -1,10 +1,10 @@
 package org.pg6100.restApi;
 
 import io.swagger.jaxrs.config.BeanConfig;
-import org.pg6100.restApi.api.CategoryRestImpl;
-import org.pg6100.restApi.api.QuestionRestImpl;
-import org.pg6100.restApi.api.SubCategoryRestImpl;
-import org.pg6100.restApi.api.SubSubCategoryRestImpl;
+import org.pg6100.restApi.api.implementation.CategoryRestImpl;
+import org.pg6100.restApi.api.implementation.QuestionRestImpl;
+import org.pg6100.restApi.api.implementation.SubCategoryRestImpl;
+import org.pg6100.restApi.api.implementation.SubSubCategoryRestImpl;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

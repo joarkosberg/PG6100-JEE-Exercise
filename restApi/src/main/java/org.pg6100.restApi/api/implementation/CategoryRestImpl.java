@@ -1,8 +1,9 @@
-package org.pg6100.restApi.api;
+package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.restApi.api.CategoryRestApi;
 import org.pg6100.restApi.dto.SubCategoryDto;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
 import org.pg6100.restApi.dto.converter.CategoryConverter;
