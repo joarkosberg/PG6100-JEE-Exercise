@@ -11,6 +11,7 @@ import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Api(value = "/categories" , description = "Handling of creating and retrieving category data")
@@ -20,6 +21,8 @@ import java.util.List;
 })
 
 public interface CategoryRestApi {
+
+    String ID_PARAM = "Id of category";
 
     //GET
     @ApiOperation("Retrieve a list of all the categories")
@@ -37,9 +40,9 @@ public interface CategoryRestApi {
 
     @ApiOperation("Get specified category by id")
     @GET
-    @Path("/id/{id}")
+    @Path("/{id}")
     CategoryDto getCategory(
-            @ApiParam("Id of category")
+            @ApiParam(ID_PARAM)
             @PathParam("id")
                     Long id);
 
@@ -77,7 +80,7 @@ public interface CategoryRestApi {
     //GET all categories that have at least one subcategory with at least one subsubcategory with at least one quiz.
     @ApiOperation("Get all categories with at least one sub category with at least one sub sub category with at least one question")
     @GET
-    @Path("/withquizzes")
+    @Path("?withquizzes")
     List<CategoryDto> getCategoriesWithQuizzes();
 
     //GET all subsubcategories with at least one quiz
@@ -94,4 +97,29 @@ public interface CategoryRestApi {
             @ApiParam("Id of category")
             @PathParam("id")
                     Long id);
+
+
+    /*
+    Deprecated
+     */
+    @ApiOperation("Get specified category by id")
+    @GET
+    @Path("/id/{id}")
+    @Deprecated
+    Response deprecatedGetCategory(
+            @ApiParam("Id of category")
+            @PathParam("id")
+                    Long id);
+
+    @ApiOperation("Get all categories with at least one sub category with at least one sub sub category with at least one question")
+    @GET
+    @Path("/withquizzes")
+    Response deprecatedGetCategoriesWithQuizzes();
+
+    /*
+• /categories/withQuizzes/subsubcategories
+should redirect to /subsubcategories?withQuizzes
+• /categories/id/{id}/subcategories
+should redirect to /categories/{id}/subcategories
+     */
 }

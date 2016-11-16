@@ -88,4 +88,19 @@ public interface SubCategoryRestApi {
             @ApiParam("Name of parent sub category")
             @PathParam("id")
                     Long subCategory);
+
+
+    /*
+    Deprecated
+     */
+
+
+    /*
+    • /subcategories/id/{id}
+◦ should redirect to /subcategories/{id}
+• /subcategories/parent/{id}
+◦ should redirect to /categories/{id}/subcategories
+• /subcategories/id/{id}/subsubcategories
+◦ should redirect to /subcategories/{id}/subsubcategories
+     */
 }

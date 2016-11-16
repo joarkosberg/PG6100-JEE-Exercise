@@ -17,6 +17,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 @Stateless
@@ -109,6 +111,23 @@ public class CategoryRestImpl implements CategoryRestApi {
     @Override
     public List<SubCategoryDto> getSubCategories(Long id) {
         return SubCategoryConverter.transform(categoryEJB.getSubCategories(id));
+    }
+
+    /*
+    Deprecated
+     */
+    @Override
+    public Response deprecatedGetCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetCategoriesWithQuizzes() {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories?withquizzes").build())
+                .build();
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

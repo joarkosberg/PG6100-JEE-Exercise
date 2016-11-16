@@ -71,4 +71,15 @@ public interface QuestionRestApi {
             @ApiParam("Id of question")
             @PathParam("id")
                     Long id);
+
+
+        /*
+    Deprecated
+     */
+
+
+    /*
+• /quizzes/id/{id}
+◦ should redirect to /quizzes/{id}
+     */
 }
