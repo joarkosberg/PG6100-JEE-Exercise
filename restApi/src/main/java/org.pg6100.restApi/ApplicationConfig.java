@@ -5,6 +5,8 @@ import org.pg6100.restApi.api.implementation.CategoryRestImpl;
 import org.pg6100.restApi.api.implementation.QuestionRestImpl;
 import org.pg6100.restApi.api.implementation.SubCategoryRestImpl;
 import org.pg6100.restApi.api.implementation.SubSubCategoryRestImpl;
+import org.pg6100.restApi.api.singleMethod.RandomQuizRest;
+import org.pg6100.restApi.api.singleMethod.RandomQuizzesRest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -31,6 +33,8 @@ public class ApplicationConfig extends Application {
         c.add(SubCategoryRestImpl.class);
         c.add(SubSubCategoryRestImpl.class);
         c.add(QuestionRestImpl.class);
+        c.add(RandomQuizRest.class);
+        c.add(RandomQuizzesRest.class);
 
         //add further configuration to activate SWAGGER
         c.add(io.swagger.jaxrs.listing.ApiListingResource.class);
