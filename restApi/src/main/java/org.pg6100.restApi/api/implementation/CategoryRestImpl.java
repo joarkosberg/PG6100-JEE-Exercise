@@ -104,11 +104,6 @@ public class CategoryRestImpl implements CategoryRestApi {
     }
 
     @Override
-    public List<SubSubCategoryDto> getSubSubCategoriesWithQuizzes() {
-        return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions());
-    }
-
-    @Override
     public List<SubCategoryDto> getSubCategories(Long id) {
         return SubCategoryConverter.transform(categoryEJB.getSubCategories(id));
     }
@@ -118,6 +113,27 @@ public class CategoryRestImpl implements CategoryRestApi {
      */
     @Override
     public Response deprecatedGetCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedUpdateCategory(Long id, CategoryDto dto) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedPatchCategoryName(Long id, String text) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedDeleteCategory(Long id) {
         return Response.status(301)
                 .location(UriBuilder.fromUri("categories/" + id).build())
                 .build();
@@ -135,6 +151,14 @@ public class CategoryRestImpl implements CategoryRestApi {
     public Response deprecatedGetSubCategories(Long id) {
         return Response.status(301)
                 .location(UriBuilder.fromUri("categories/" + id + "/subcategories").build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetSubSubCategoriesWithQuizzes() {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subsubcategories")
+                        .queryParam("withQuizzes", true).build())
                 .build();
     }
 

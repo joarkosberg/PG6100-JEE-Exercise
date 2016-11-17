@@ -2,6 +2,7 @@ package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.restApi.api.SubSubCategoryRestApi;
 import org.pg6100.restApi.dto.SubSubCategoryDto;
@@ -13,6 +14,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 @Stateless
@@ -23,13 +26,29 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi {
     private CategoryEJB categoryEJB;
 
     @Override
-    public List<SubSubCategoryDto> getAllSubSubCategories() {
+    public List<SubSubCategoryDto> getAllSubSubCategories(Boolean withQuizzes) {
+        if(withQuizzes != null)
+            if(withQuizzes)
+                return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions());
         return SubSubCategoryConverter.transform(categoryEJB.getAllSubSubCategories());
     }
 
     @Override
-    public List<SubSubCategoryDto> getSubSubCategories(Long subCategory) {
-        return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategories(subCategory));
+    public Long createSubSubCategory(SubSubCategoryDto dto) {
+        if(!Strings.isNullOrEmpty(dto.id))
+            throw new WebApplicationException("Cannot specify id for a newly generated sub sub categories", 400);
+        if(Strings.isNullOrEmpty(dto.name)){
+            throw new WebApplicationException("Must specify name of sub sub category", 400);
+        }
+
+        Long id;
+        try{
+            id = categoryEJB.createNewSubSubCategory(dto.name, Long.valueOf(dto.subCategory.id));
+        }catch (Exception e){
+            throw wrapException(e);
+        }
+
+        return id;
     }
 
     @Override
@@ -81,22 +100,42 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi {
         categoryEJB.delete(id);
     }
 
+    /*
+    Deprecated
+     */
     @Override
-    public Long createSubSubCategory(SubSubCategoryDto dto) {
-        if(!Strings.isNullOrEmpty(dto.id))
-            throw new WebApplicationException("Cannot specify id for a newly generated sub sub categories", 400);
-        if(Strings.isNullOrEmpty(dto.name)){
-            throw new WebApplicationException("Must specify name of sub sub category", 400);
-        }
+    public Response deprecatedGetSubSubCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subsubcategories/" + id).build())
+                .build();
+    }
 
-        Long id;
-        try{
-            id = categoryEJB.createNewSubSubCategory(dto.name, Long.valueOf(dto.subCategory.id));
-        }catch (Exception e){
-            throw wrapException(e);
-        }
+    @Override
+    public Response deprecatedUpdateSubSubCategory(Long id, SubSubCategoryDto dto) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subsubcategories/" + id).build())
+                .build();
+    }
 
-        return id;
+    @Override
+    public Response deprecatedPatchSubSubCategoryParent(Long id, Long parentId) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subsubcategories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedDeleteSubSubCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subsubcategories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetSubSubCategories(Long subCategory) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + subCategory + "/subsubcategories").build())
+                .build();
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

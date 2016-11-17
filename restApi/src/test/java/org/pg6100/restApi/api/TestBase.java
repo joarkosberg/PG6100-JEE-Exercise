@@ -50,7 +50,7 @@ public class TestBase {
                 .extract().as(QuestionDto[].class));
         questions.stream().forEach(dto ->
                 given().pathParam("id", dto.id)
-                        .delete("/id/{id}")
+                        .delete("/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
 
@@ -63,7 +63,7 @@ public class TestBase {
                 .extract().as(SubSubCategoryDto[].class));
         subSubCategories.stream().forEach(subSub ->
                 given().pathParam("id", subSub.id)
-                        .delete("/id/{id}")
+                        .delete("/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
 
@@ -76,7 +76,7 @@ public class TestBase {
                 .extract().as(SubCategoryDto[].class));
         subCategories.stream().forEach(dto ->
                 given().pathParam("id", dto.id)
-                        .delete("/id/{id}")
+                        .delete("/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
 
@@ -89,7 +89,7 @@ public class TestBase {
                 .extract().as(CategoryDto[].class));
         categories.stream().forEach(dto ->
                 given().pathParam("id", dto.id)
-                        .delete("/id/{id}")
+                        .delete("/{id}")
                         .then().statusCode(204));
         get().then().statusCode(200).body("size()", is(0));
 

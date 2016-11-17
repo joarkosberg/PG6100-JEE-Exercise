@@ -44,7 +44,7 @@ public interface QuestionRestApi {
 
     @ApiOperation("Update specified question by id")
     @PUT
-    @Path("/id/{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     void updateQuestion(
             @ApiParam("Id of question")
@@ -53,9 +53,8 @@ public interface QuestionRestApi {
             @ApiParam("Question to replace the old one")
                     QuestionDto dto);
 
-    //PATCH ID /id/{id}
     @ApiOperation("Modify the text if a Question")
-    @Path("/id/{id}")
+    @Path("/{id}")
     @PATCH
     @Consumes(MediaType.TEXT_PLAIN)
     void patchQuestionText(
@@ -67,7 +66,7 @@ public interface QuestionRestApi {
 
     @ApiOperation("Delete a question with the given id")
     @DELETE
-    @Path("/id/{id}")
+    @Path("/{id}")
     void deleteQuestion(
             @ApiParam("Id of question")
             @PathParam("id")
@@ -82,6 +81,39 @@ public interface QuestionRestApi {
     @Deprecated
     Response deprecatedGetQuestion(
             @ApiParam("Id of the question")
+            @PathParam("id")
+                    Long id);
+
+    @ApiOperation("Update specified question by id")
+    @PUT
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Deprecated
+    Response deprecatedUpdateQuestion(
+            @ApiParam("Id of question")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("Question to replace the old one")
+                    QuestionDto dto);
+
+    @ApiOperation("Modify the text if a Question")
+    @Path("/id/{id}")
+    @PATCH
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Deprecated
+    Response deprecatePatchQuestionText(
+            @ApiParam("The unique id of a question")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("New question text")
+                    String text);
+
+    @ApiOperation("Delete a question with the given id")
+    @DELETE
+    @Path("/id/{id}")
+    @Deprecated
+    Response deprecatedDeleteQuestion(
+            @ApiParam("Id of question")
             @PathParam("id")
                     Long id);
 }

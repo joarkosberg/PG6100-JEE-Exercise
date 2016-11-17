@@ -69,12 +69,14 @@ public class SubSubCategoryRestIT extends TestBase {
                 .body(subSubCategoryDto)
                 .put("/id/{id}")
                 .then()
-                .statusCode(204);
+                .statusCode(301);
 
+        /*
         given().pathParam("id", subSubCategoryDto.id)
                 .get("/id/{id}")
                 .then()
                 .body("name", is(newName));
+                */
     }
 
     @Test
@@ -101,12 +103,14 @@ public class SubSubCategoryRestIT extends TestBase {
                 .body(subCategoryDto2.id)
                 .patch("/id/{id}")
                 .then()
-                .statusCode(204);
+                .statusCode(301);
 
+        /*
         given().pathParam("id", subSubCategoryDto.id)
                 .get("/id/{id}")
                 .then()
                 .body("subCategory.id", is(subCategoryDto2.id));
+                */
 
     }
 
@@ -148,6 +152,7 @@ public class SubSubCategoryRestIT extends TestBase {
     }
 
     //Invalid requests 4**
+    //Now permanently redirects 3**
     @Test
     public void testPatchWithNonExistingSubSubCategory(){
         CategoryDto categoryDto = new CategoryDto(null, "cat");
@@ -164,7 +169,7 @@ public class SubSubCategoryRestIT extends TestBase {
                 .body(subCategoryDto.id)
                 .patch("/id/{id}")
                 .then()
-                .statusCode(404);
+                .statusCode(301);
     }
 
     @Test
@@ -183,7 +188,7 @@ public class SubSubCategoryRestIT extends TestBase {
                 .body(subCategoryDto.id + "1")
                 .patch("/id/{id}")
                 .then()
-                .statusCode(404);
+                .statusCode(301);
     }
 
     @Test
@@ -193,6 +198,6 @@ public class SubSubCategoryRestIT extends TestBase {
 
         given().pathParam("id", categoryDto.id)
                 .delete("/id/{id}")
-                .then().statusCode(404);
+                .then().statusCode(301);
     }
 }

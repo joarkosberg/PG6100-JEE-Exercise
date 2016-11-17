@@ -111,6 +111,27 @@ Deprecated
                 .build();
     }
 
+    @Override
+    public Response deprecatedUpdateQuestion(Long id, QuestionDto dto) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("quizzes/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatePatchQuestionText(Long id, String text) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("quizzes/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedDeleteQuestion(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("quizzes/" + id).build())
+                .build();
+    }
+
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{
         Throwable cause = Throwables.getRootCause(e);
         if(cause instanceof ConstraintViolationException){

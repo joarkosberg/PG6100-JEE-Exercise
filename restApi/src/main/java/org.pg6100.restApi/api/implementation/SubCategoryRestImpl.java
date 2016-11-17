@@ -2,6 +2,7 @@ package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.restApi.api.SubCategoryRestApi;
 import org.pg6100.restApi.dto.SubCategoryDto;
@@ -15,6 +16,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 @Stateless
@@ -30,8 +33,23 @@ public class SubCategoryRestImpl implements SubCategoryRestApi {
     }
 
     @Override
-    public List<SubCategoryDto> getSubCategories(Long category) {
-        return SubCategoryConverter.transform(categoryEJB.getSubCategories(category));
+    public Long createSubCategory(SubCategoryDto dto) {
+        if(!Strings.isNullOrEmpty(dto.id))
+            throw new WebApplicationException("Cannot specify id for a newly generated sub categories", 400);
+        if(Strings.isNullOrEmpty(dto.name)){
+            throw new WebApplicationException("Must specify name of sub category", 400);
+        }
+
+        Long id;
+        try{
+            System.out.println(Long.valueOf(dto.category.id) + " ID");
+            System.out.println(dto.name + " NAME");
+            id = categoryEJB.createNewSubCategory(dto.name, Long.valueOf(dto.category.id));
+        }catch (Exception e){
+            throw wrapException(e);
+        }
+
+        return id;
     }
 
     @Override
@@ -88,24 +106,49 @@ public class SubCategoryRestImpl implements SubCategoryRestApi {
         return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategories(subCategory));
     }
 
+    /*
+    Deprecated
+     */
     @Override
-    public Long createSubCategory(SubCategoryDto dto) {
-        if(!Strings.isNullOrEmpty(dto.id))
-            throw new WebApplicationException("Cannot specify id for a newly generated sub categories", 400);
-        if(Strings.isNullOrEmpty(dto.name)){
-            throw new WebApplicationException("Must specify name of sub category", 400);
-        }
+    public Response deprecatedGetSubCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + id).build())
+                .build();
+    }
 
-        Long id;
-        try{
-            System.out.println(Long.valueOf(dto.category.id) + " ID");
-            System.out.println(dto.name + " NAME");
-            id = categoryEJB.createNewSubCategory(dto.name, Long.valueOf(dto.category.id));
-        }catch (Exception e){
-            throw wrapException(e);
-        }
+    @Override
+    public Response deprecatedUpdateSubCategory(Long id, SubCategoryDto dto) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + id).build())
+                .build();
+    }
 
-        return id;
+    @Override
+    public Response deprecatedPatchSubCategoryName(Long id, String name) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedDeleteSubCategory(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + id).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetSubSubCategories(Long subCategory) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("subcategories/" + subCategory + "/subsubcategories").build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetSubCategories(Long category) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + category + "/subcategories").build())
+                .build();
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

@@ -58,11 +58,13 @@ public class SubCategoryRestIT extends TestBase {
                 .body(subCategoryDto)
                 .put("/id/{id}")
                 .then()
-                .statusCode(204);
+                .statusCode(301);
 
+        /*
         get("/id/" + subCategoryDto.id)
                 .then()
                 .body("name", is(newName));
+                */
     }
 
     @Test
@@ -85,11 +87,13 @@ public class SubCategoryRestIT extends TestBase {
                 .body(newName)
                 .patch("/id/{id}")
                 .then()
-                .statusCode(204);
+                .statusCode(301);
 
+        /*
         get("/id/" + subCategoryDto.id)
                 .then()
                 .body("name", is(newName));
+                */
     }
 
     //@Path("/parent/{id}")
@@ -146,6 +150,7 @@ public class SubCategoryRestIT extends TestBase {
 
 
     //Invalid requests 4**
+    //Now deprecated 3**
     @Test
     public void testUpdateWithIdNotLong(){
         CategoryDto categoryDto = new CategoryDto(null, "cat");
@@ -159,7 +164,7 @@ public class SubCategoryRestIT extends TestBase {
                 .body(new SubCategoryDto("hiNotANumber", "hei", new CategoryDto()))
                 .put("/id/{id}")
                 .then()
-                .statusCode(400);
+                .statusCode(301);
     }
 
     @Test
@@ -175,7 +180,7 @@ public class SubCategoryRestIT extends TestBase {
                 .body(new SubCategoryDto(subCategoryDto1.id + "2", "hei", new CategoryDto()))
                 .put("/id/{id}")
                 .then()
-                .statusCode(409);
+                .statusCode(301);
     }
 
     @Test
