@@ -4,7 +4,6 @@ import io.swagger.annotations.*;
 import io.swagger.jaxrs.PATCH;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.SubCategoryDto;
-import org.pg6100.restApi.dto.SubSubCategoryDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +13,7 @@ import java.util.List;
 @Api(value = "/categories" , description = "Handling of creating and retrieving category data")
 @Path("/categories")
 @Produces({
+        Formats.V2_JSON,
         Formats.BASE_JSON
 })
 
@@ -36,7 +36,8 @@ public interface CategoryRestApi {
     //POST
     @ApiOperation("Create a new category")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Name of the newly created category")
     Long createCategory(
             @ApiParam("Name of category")
@@ -57,7 +58,7 @@ public interface CategoryRestApi {
     @ApiOperation("Update specified category by id")
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(Formats.BASE_JSON)
     void updateCategory(
             @ApiParam("Id of category")
             @PathParam("id")

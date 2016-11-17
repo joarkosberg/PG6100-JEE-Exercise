@@ -15,6 +15,7 @@ import java.util.List;
 @Api(value = "/quizzes" , description = "Handling of creating and retrieving quiz data")
 @Path("/quizzes")
 @Produces({
+        Formats.V2_JSON,
         Formats.BASE_JSON
 })
 
@@ -28,7 +29,8 @@ public interface QuestionRestApi {
     //POST
     @ApiOperation("Create a new question")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Id of the newly created question")
     Long createQuestion(
             @ApiParam("Text of question, answers, correctAnswer and which subsubcategory it belongs to")
@@ -45,7 +47,7 @@ public interface QuestionRestApi {
     @ApiOperation("Update specified question by id")
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(Formats.BASE_JSON)
     void updateQuestion(
             @ApiParam("Id of question")
             @PathParam("id")

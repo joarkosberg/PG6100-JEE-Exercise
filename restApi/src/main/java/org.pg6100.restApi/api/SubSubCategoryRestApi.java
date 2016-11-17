@@ -12,6 +12,7 @@ import java.util.List;
 @Api(value = "/subsubcategories" , description = "Handling of creating and retrieving quiz data")
 @Path("/subsubcategories")
 @Produces({
+        Formats.V2_JSON,
         Formats.BASE_JSON
 })
 
@@ -28,7 +29,8 @@ public interface SubSubCategoryRestApi {
 
     @ApiOperation("Create a new sub sub category")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Id of the newly create sub sub category")
     Long createSubSubCategory(
             @ApiParam("Name of new sub sub category and parent sub category")
@@ -49,7 +51,7 @@ public interface SubSubCategoryRestApi {
     @ApiOperation("Update specified sub sub category by id")
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(Formats.BASE_JSON)
     void updateSubSubCategory(
             @ApiParam("Id of sub sub category")
             @PathParam("id")
