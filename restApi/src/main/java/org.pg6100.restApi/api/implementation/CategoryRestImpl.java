@@ -2,6 +2,7 @@ package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.restApi.api.CategoryRestApi;
 import org.pg6100.restApi.dto.SubCategoryDto;
@@ -29,7 +30,11 @@ public class CategoryRestImpl implements CategoryRestApi {
     private CategoryEJB categoryEJB;
 
     @Override
-    public List<CategoryDto> getCategories() {
+    public List<CategoryDto> getCategories(Boolean withQuizzes) {
+        if(withQuizzes != null)
+            if (withQuizzes)
+                return CategoryConverter.transform(categoryEJB.getCategoriesWithQuestions());
+
         return CategoryConverter.transform(categoryEJB.getAllCategories());
     }
 
@@ -99,11 +104,6 @@ public class CategoryRestImpl implements CategoryRestApi {
     }
 
     @Override
-    public List<CategoryDto> getCategoriesWithQuizzes() {
-        return CategoryConverter.transform(categoryEJB.getCategoriesWithQuestions());
-    }
-
-    @Override
     public List<SubSubCategoryDto> getSubSubCategoriesWithQuizzes() {
         return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions());
     }
@@ -126,7 +126,15 @@ public class CategoryRestImpl implements CategoryRestApi {
     @Override
     public Response deprecatedGetCategoriesWithQuizzes() {
         return Response.status(301)
-                .location(UriBuilder.fromUri("categories?withquizzes").build())
+                .location(UriBuilder.fromUri("categories")
+                        .queryParam("withQuizzes", true).build())
+                .build();
+    }
+
+    @Override
+    public Response deprecatedGetSubCategories(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("categories/" + id + "/subcategories").build())
                 .build();
     }
 

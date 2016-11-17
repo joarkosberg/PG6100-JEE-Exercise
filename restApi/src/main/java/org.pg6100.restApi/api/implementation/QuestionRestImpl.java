@@ -2,6 +2,7 @@ package org.pg6100.restApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.QuestionEJB;
 import org.pg6100.quiz.entity.Question;
 import org.pg6100.restApi.api.QuestionRestApi;
@@ -14,6 +15,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 @Stateless
@@ -96,6 +99,16 @@ public class QuestionRestImpl implements QuestionRestApi {
             throw new WebApplicationException("Cannot find question with id: " + id, 404);
         }
         questionEJB.deleteQuestion(id);
+    }
+
+    /*
+Deprecated
+*/
+    @Override
+    public Response deprecatedGetQuestion(Long id) {
+        return Response.status(301)
+                .location(UriBuilder.fromUri("quizzes/" + id).build())
+                .build();
     }
 
     private WebApplicationException wrapException(Exception e) throws WebApplicationException{

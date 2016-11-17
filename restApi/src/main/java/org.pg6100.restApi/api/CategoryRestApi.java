@@ -27,7 +27,11 @@ public interface CategoryRestApi {
     //GET
     @ApiOperation("Retrieve a list of all the categories")
     @GET
-    List<CategoryDto> getCategories();
+    List<CategoryDto> getCategories(
+            @ApiParam("True if only want categories with quizzes")
+            @QueryParam("withQuizzes")
+                    Boolean withQuizzes
+    );
 
     //POST
     @ApiOperation("Create a new category")
@@ -77,12 +81,6 @@ public interface CategoryRestApi {
             @PathParam("id")
                     Long id);
 
-    //GET all categories that have at least one subcategory with at least one subsubcategory with at least one quiz.
-    @ApiOperation("Get all categories with at least one sub category with at least one sub sub category with at least one question")
-    @GET
-    @Path("?withquizzes")
-    List<CategoryDto> getCategoriesWithQuizzes();
-
     //GET all subsubcategories with at least one quiz
     @ApiOperation("Get all sub sub categories with at least one question")
     @GET
@@ -92,12 +90,11 @@ public interface CategoryRestApi {
     //GET all subcategories of the category specified by id
     @ApiOperation("Get all sub categories of a specified category id")
     @GET
-    @Path("/id/{id}/subcategories")
+    @Path("/{id}/subcategories")
     List<SubCategoryDto> getSubCategories(
             @ApiParam("Id of category")
             @PathParam("id")
                     Long id);
-
 
     /*
     Deprecated
@@ -114,12 +111,21 @@ public interface CategoryRestApi {
     @ApiOperation("Get all categories with at least one sub category with at least one sub sub category with at least one question")
     @GET
     @Path("/withquizzes")
+    @Deprecated
     Response deprecatedGetCategoriesWithQuizzes();
+
+    @ApiOperation("Get all sub categories of a specified category id")
+    @GET
+    @Path("/id/{id}/subcategories")
+    @Deprecated
+    Response deprecatedGetSubCategories(
+            @ApiParam("Id of category")
+            @PathParam("id")
+                    Long id);
 
     /*
 • /categories/withQuizzes/subsubcategories
 should redirect to /subsubcategories?withQuizzes
-• /categories/id/{id}/subcategories
-should redirect to /categories/{id}/subcategories
+
      */
 }

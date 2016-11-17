@@ -9,6 +9,7 @@ import org.pg6100.restApi.dto.QuestionDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Api(value = "/quizzes" , description = "Handling of creating and retrieving quiz data")
@@ -35,7 +36,7 @@ public interface QuestionRestApi {
 
     @ApiOperation("Get specific question by id")
     @GET
-    @Path("/id/{id}")
+    @Path("/{id}")
     QuestionDto getQuestion(
             @ApiParam("Id of the question")
             @PathParam("id")
@@ -72,14 +73,15 @@ public interface QuestionRestApi {
             @PathParam("id")
                     Long id);
 
-
         /*
     Deprecated
      */
-
-
-    /*
-• /quizzes/id/{id}
-◦ should redirect to /quizzes/{id}
-     */
+    @ApiOperation("Get specific question by id")
+    @GET
+    @Path("/id/{id}")
+    @Deprecated
+    Response deprecatedGetQuestion(
+            @ApiParam("Id of the question")
+            @PathParam("id")
+                    Long id);
 }
