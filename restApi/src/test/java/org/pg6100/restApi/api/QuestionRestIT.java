@@ -102,7 +102,7 @@ public class QuestionRestIT extends TestBase {
     }
 
     @Test //TODO
-    public void createQuestionsFromDifferentSubCategories(){
+    public void testCreateQuestionsFromDifferentSubCategories(){
 
     }
 

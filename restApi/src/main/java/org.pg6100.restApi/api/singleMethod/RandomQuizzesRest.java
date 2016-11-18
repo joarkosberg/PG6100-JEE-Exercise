@@ -1,5 +1,6 @@
 package org.pg6100.restApi.api.singleMethod;
 
+import com.google.common.base.Throwables;
 import io.swagger.annotations.*;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.ejb.QuestionEJB;
@@ -8,10 +9,11 @@ import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.converter.QuestionConverter;
 
 import javax.ejb.EJB;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Api(value = "/randomquizzes" , description = "Gets random quizzes")
 @Path("/randomquizzes")
@@ -28,53 +30,61 @@ public class RandomQuizzesRest {
     @EJB
     private QuestionEJB questionEJB;
 
-    @ApiOperation("Retrieve a random question from a category, sub category, sub sub category or random")
-    @ApiResponses({
-            @ApiResponse(code = 307, message = "Temporary redirect"),
-            @ApiResponse(code = 400, message = "No questions created"),
-            @ApiResponse(code = 404, message = "No category, sub category or sub sub category with that id")
-    })
+    @ApiOperation("Retrieve a set of questions bastion on your criteria")
     @POST
-    public Response get(
-            @ApiParam("ID of category to fetch a quiz from")
+    public List<Long> getQuizzes(
+            @ApiParam("Number of questions wanted(Default 5)")
+            @DefaultValue("5")@QueryParam("n")
+                    Integer numberOfQuestions,
+            @ApiParam("Id of category/ sub or  sub sub if you want questions only from specific place.")
             @QueryParam("filter")
-                    Integer n,
-            @ApiParam("ID of category to fetch a quiz from")
-            @QueryParam("filter")
-                    Long filter){
-        Random r = new Random();
+                    Long id){
         List<QuestionDto> questions = QuestionConverter.transform(questionEJB.getAllQuestions());
-        String quizId;
 
-        if(questions.isEmpty())
-            return Response.status(400).build();
-/*
-        if(id == null)
-            quizId = questions.get(r.nextInt(questions.size()) - 1).id;
-        else if(categoryEJB.isCategoryPresent(id))
-            quizId = questions
-                    .stream()
-                    .filter(q -> q.subSubCategory.subCategory.category.id.equals(id))
-                    .findAny().get().id;
-        else if(categoryEJB.isSubCategoryPresent(id))
-            quizId = questions
-                    .stream()
-                    .filter(q -> q.subSubCategory.subCategory.id.equals(id))
-                    .findAny().get().id;
-        else if(categoryEJB.isCategoryPresent(id))
-            quizId = questions
-                    .stream()
-                    .filter(q -> q.subSubCategory.id.equals(id))
-                    .findAny().get().id;
-        else{
-            return Response.status(404).build();
+        if(questions == null || questions.size() < numberOfQuestions)
+            throw new WebApplicationException("Not enough quizzes to fill: " + numberOfQuestions + " places.", 400);
+
+        if(id == null) {
+            return getIds(questions, numberOfQuestions, x -> true);
+        } else if(categoryEJB.isCategoryPresent(id)) {
+            return getIds(questions, numberOfQuestions, q -> q.subSubCategory.subCategory.category.id.equals(id.toString()));
+        } else if(categoryEJB.isSubCategoryPresent(id)) {
+            return getIds(questions, numberOfQuestions, q -> q.subSubCategory.subCategory.id.equals(id.toString()));
+        } else if(categoryEJB.isSubSubCategoryPresent(id)) {
+            return getIds(questions, numberOfQuestions, q -> q.subSubCategory.id.equals(id.toString()));
+        } else {
+            throw new WebApplicationException("No category, sub category or sub sub category with id " + id, 404);
         }
+    }
 
-        return Response.status(307)
-                .location(UriBuilder.fromUri("quizzes/" + quizId).build())
-                .build();
-                */
+    private List<Long> getIds(List<QuestionDto> questions, int numberOfQuestions, Predicate<QuestionDto> predicate){
+        Random r = new Random();
+        List<QuestionDto> filteredQuestions = questions.stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
 
-return null;
+        if(filteredQuestions.size() < numberOfQuestions)
+            throw new WebApplicationException("Not enough quizzes to fill: " + numberOfQuestions + " places.", 400);
+
+        else if (filteredQuestions.size() == numberOfQuestions)
+            return filteredQuestions.stream()
+                    .map(q -> Long.valueOf(q.id))
+                    .collect(Collectors.toList());
+
+        else {
+            Set<Long> ids = new HashSet<>();
+            while (ids.size() != numberOfQuestions)
+                ids.add(Long.valueOf(filteredQuestions.get(r.nextInt(filteredQuestions.size())).id));
+            return new ArrayList<>(ids);
+        }
+    }
+
+    private WebApplicationException wrapException(Exception e) throws WebApplicationException{
+        Throwable cause = Throwables.getRootCause(e);
+        if(cause instanceof ConstraintViolationException){
+            return new WebApplicationException("Invalid constraints on input: " + cause.getMessage(), 400);
+        } else {
+            return new WebApplicationException("Internal error", 500);
+        }
     }
 }

@@ -1,10 +1,8 @@
 package org.pg6100.restApi.api.singleMethod;
 
-import com.google.common.base.Throwables;
 import io.swagger.annotations.*;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.ejb.QuestionEJB;
-import org.pg6100.quiz.entity.Question;
 import org.pg6100.restApi.api.Formats;
 import org.pg6100.restApi.dto.QuestionDto;
 import org.pg6100.restApi.dto.converter.QuestionConverter;
@@ -13,8 +11,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Api(value = "/randomquiz" , description = "Gets random quiz")
@@ -41,7 +38,7 @@ public class RandomQuizRest {
     })
     @GET
     public Response get(
-            @ApiParam("ID of category to fetch a quiz from")
+            @ApiParam("ID of category, sub category or sub sub category to fetch a quiz from (Leave blank if you want total random")
             @QueryParam("filter")
                     Long id){
         Random r = new Random();

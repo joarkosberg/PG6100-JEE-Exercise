@@ -1,6 +1,7 @@
 package org.pg6100.restApi.api;
 
 import io.restassured.RestAssured;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pg6100.restApi.dto.CategoryDto;
 import org.pg6100.restApi.dto.QuestionDto;
@@ -15,13 +16,16 @@ import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
-public class OtherRestIT extends TestBase{
+public class RandomQuizRestIT extends TestBase{
 
-    @Test
-    public void randomQuizWithValidCategories(){
+    @BeforeClass
+    public static void setBasePath(){
         activeRest = randomQuizRest;
         RestAssured.basePath = activeRest;
+    }
 
+    @Test
+    public void testRandomQuizWithValidCategories(){
         CategoryDto category1 = new CategoryDto(null, "cat1");
         category1.id = createCategory(category1);
         CategoryDto category2 = new CategoryDto(null, "cat2");
@@ -65,8 +69,7 @@ public class OtherRestIT extends TestBase{
         given().queryParam("filter", subCategory2.id)
                 .get()
                 .then()
-                .statusCode(200)
-                .body("size()", is(5));
+                .statusCode(409);
 
         given().queryParam("filter", category1.id)
                 .get()
@@ -81,10 +84,7 @@ public class OtherRestIT extends TestBase{
     }
 
     @Test
-    public void randomQuizWithoutParameterAlwaysGetsAQuestion(){
-        activeRest = randomQuizRest;
-        RestAssured.basePath = activeRest;
-
+    public void testRandomQuizWithoutParameterAlwaysGetsAQuestion(){
         createTestData();
 
         Set<Long> ids = new HashSet<>();
@@ -101,10 +101,7 @@ public class OtherRestIT extends TestBase{
     }
 
     @Test
-    public void randomQuizInvalidIdTest(){
-        activeRest = randomQuizRest;
-        RestAssured.basePath = activeRest;
-
+    public void testRandomQuizInvalidIdTest(){
         List<Long> ids = createTestData();
         Random random = new Random();
         Long randomNumber;
@@ -122,9 +119,6 @@ public class OtherRestIT extends TestBase{
 
     @Test
     public void randomQuizWithoutQuestionsTest(){
-        activeRest = randomQuizRest;
-        RestAssured.basePath = activeRest;
-
         get().then()
                 .statusCode(400);
     }
