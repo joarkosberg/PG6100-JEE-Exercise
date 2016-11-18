@@ -36,7 +36,8 @@ public class RandomQuizRest {
     @ApiResponses({
             @ApiResponse(code = 307, message = "Temporary redirect to your quiz!"),
             @ApiResponse(code = 400, message = "No questions created"),
-            @ApiResponse(code = 404, message = "No category, sub category or sub sub category with that id")
+            @ApiResponse(code = 404, message = "No category, sub category or sub sub category with that id"),
+            @ApiResponse(code = 409, message = "No questions created for that id")
     })
     @GET
     public Response get(
@@ -45,6 +46,7 @@ public class RandomQuizRest {
                     Long id){
         Random r = new Random();
         List<QuestionDto> questions = QuestionConverter.transform(questionEJB.getAllQuestions());
+        List<QuestionDto> filteredQuestions;
         String quizId;
 
         if(questions == null || questions.size() < 1)
@@ -53,23 +55,26 @@ public class RandomQuizRest {
         if(id == null) {
             quizId = questions.get(r.nextInt(questions.size())).id;
         } else if(categoryEJB.isCategoryPresent(id)) {
-            questions = questions
+            filteredQuestions = questions
                     .stream()
-                    .filter(q -> q.subSubCategory.subCategory.category.id.equals(id))
+                    .filter(q -> q.subSubCategory.subCategory.category.id.equals(id.toString()))
                     .collect(Collectors.toList());
-            quizId = questions.get(r.nextInt(questions.size())).id;
+            if(filteredQuestions.size() < 1) return Response.status(409).build();
+            quizId = filteredQuestions.get(r.nextInt(filteredQuestions.size())).id;
         } else if(categoryEJB.isSubCategoryPresent(id)) {
-            questions = questions
+            filteredQuestions = questions
                     .stream()
-                    .filter(q -> q.subSubCategory.subCategory.id.equals(id))
+                    .filter(q -> q.subSubCategory.subCategory.id.equals(id.toString()))
                     .collect(Collectors.toList());
-            quizId = questions.get(r.nextInt(questions.size())).id;
+            if(filteredQuestions.size() < 1) return Response.status(409).build();
+            quizId = filteredQuestions.get(r.nextInt(filteredQuestions.size())).id;
         } else if(categoryEJB.isSubSubCategoryPresent(id)) {
-            questions = questions
+            filteredQuestions = questions
                     .stream()
-                    .filter(q -> q.subSubCategory.id.equals(id))
+                    .filter(q -> q.subSubCategory.id.equals(id.toString()))
                     .collect(Collectors.toList());
-            quizId = questions.get(r.nextInt(questions.size())).id;
+            if(filteredQuestions.size() < 1) return Response.status(409).build();
+            quizId = filteredQuestions.get(r.nextInt(filteredQuestions.size())).id;
         } else {
             return Response.status(404).build();
         }

@@ -22,7 +22,9 @@ public class TestBase {
     protected final static String questionRest = "/quiz/api/quizzes";
     protected final static String subSubCategoryRest = "/quiz/api/subsubcategories";
     protected final static String subCategoryRest = "/quiz/api/subcategories";
-    protected final static String categoryRest = "quiz/api/categories";
+    protected final static String categoryRest = "/quiz/api/categories";
+    protected final static String randomQuizRest = "/quiz/api/randomquiz";
+    protected final static String randomQuizzesRest = "/quiz/api/randomquizzes";
 
     protected static String activeRest;
 

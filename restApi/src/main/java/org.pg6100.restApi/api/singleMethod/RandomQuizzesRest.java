@@ -10,7 +10,6 @@ import org.pg6100.restApi.dto.converter.QuestionConverter;
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 import java.util.Random;
 

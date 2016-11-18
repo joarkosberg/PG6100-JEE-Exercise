@@ -101,6 +101,11 @@ public class QuestionRestIT extends TestBase {
                 */
     }
 
+    @Test //TODO
+    public void createQuestionsFromDifferentSubCategories(){
+
+    }
+
     @Test
     public void testCreateQuestionWithInvalidCountOfAnswers(){
         SubSubCategoryDto subSubCategoryDto = createAndGetSubSubCategory();
