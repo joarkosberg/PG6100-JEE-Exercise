@@ -14,8 +14,9 @@
 
     <modules>
         <module>quiz</module>
-        <module>restApi</module>
+        <module>quizApi</module>
         <module>jacoco</module>
+        <module>gameApi</module>
     </modules>
 
 
