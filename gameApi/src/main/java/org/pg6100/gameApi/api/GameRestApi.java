@@ -1,13 +1,9 @@
 package org.pg6100.gameApi.api;
 
 import io.swagger.annotations.*;
-import org.pg6100.gameApi.dto.GameDto;
+import org.pg6100.gameApi.model.Game;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Api(value = "/games" , description = "Handling game data")
@@ -22,10 +18,9 @@ public interface GameRestApi {
 
     @ApiOperation("Retrieve a random question from a category, sub category, sub sub category or random")
     @GET
-    List<GameDto> getActiveGames(
-            @ApiParam("ID of category, sub category or sub sub category to get games from.")
+    List<Game> getActiveGames(
+            @ApiParam("Limit lines of output")
+            @DefaultValue("5")
             @QueryParam("n")
-                    Long id);
-
-
+                    Integer limit);
 }
