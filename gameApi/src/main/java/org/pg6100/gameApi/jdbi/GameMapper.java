@@ -4,7 +4,6 @@ import org.pg6100.gameApi.model.Game;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

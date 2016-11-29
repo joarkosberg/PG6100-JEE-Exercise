@@ -11,15 +11,21 @@ import java.util.List;
 @RegisterMapper(GameMapper.class)
 public interface GameDAO {
 
-    public static final String GAME = "GAME";
+    String GAME_TABLE = "GAME_TABLE";
 
-    @SqlQuery("select * from " + GAME + " limit :limit")
+    @SqlUpdate("CREATE TABLE " + GAME_TABLE +
+            " (id INT AUTO_INCREMENT PRIMARY KEY," +
+            " questions ARRAY," +
+            " answeredQuestions INT)")
+    void createGameTable();
+
+    @SqlQuery("select * from " + GAME_TABLE + " limit :limit")
     List<Game> getAll(@Bind("limit") Integer limit);
 
-    @SqlQuery("select * from " + GAME + " where id = :id")
+    @SqlQuery("select * from " + GAME_TABLE + " where id = :id")
     Game findById(@Bind("id") Long id);
 
-    @SqlUpdate("insert into " + GAME + " (questions, answeredQuestions) values (:questions, :answeredQuestions)")
+    @SqlUpdate("insert into " + GAME_TABLE + " (questions, answeredQuestions) values (:questions, :answeredQuestions)")
     int insert(@Bind("questions") Long[] questions,
                @Bind("answeredQuestions") int answeredQuestions);
 }
