@@ -51,21 +51,22 @@ public class GameApplication extends Application<GameConfiguration> {
         gameDAO.createGameTable();
         addExampleData(gameDAO);
 
-        environment.jersey().setUrlPattern("/gameApi/api/*");
+        environment.jersey().setUrlPattern("/game/api/*");
         environment.jersey().register(gameResource);
 
-        //swagger
+        //Swagger
         environment.jersey().register(new ApiListingResource());
 
+        //Swagger at: localhost:8081/index.html
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("0.2");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8081");
         beanConfig.setBasePath("/game/api");
-        beanConfig.setResourcePackage("org.pg6100.gameApi");
+        beanConfig.setResourcePackage("org.pg6100.gameApi.api");
         beanConfig.setScan(true);
 
-        //add further configuration to activate SWAGGER
+        //Add further configuration to activate SWAGGER
         environment.jersey().register(new io.swagger.jaxrs.listing.ApiListingResource());
         environment.jersey().register(new io.swagger.jaxrs.listing.SwaggerSerializers());
     }
