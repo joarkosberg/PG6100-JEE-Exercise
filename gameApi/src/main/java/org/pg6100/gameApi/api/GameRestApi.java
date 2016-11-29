@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import org.pg6100.gameApi.model.Game;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Api(value = "/games" , description = "Handling game data")
@@ -16,10 +17,18 @@ import java.util.List;
 public interface GameRestApi {
     String ID_PARAM ="The numeric id of the news";
 
-    @ApiOperation("Retrieve a random question from a category, sub category, sub sub category or random")
+    @ApiOperation("Retrieve a set of active games")
     @GET
     List<Game> getActiveGames(
-            @ApiParam("Limit lines of output")
+            @ApiParam("Limit games to get(default 5)")
+            @DefaultValue("5")
+            @QueryParam("n")
+                    Integer limit);
+
+    @ApiOperation("Create a new active game")
+    @POST
+    Response createGame(
+            @ApiParam("Number of questions wanted (default 5)")
             @DefaultValue("5")
             @QueryParam("n")
                     Integer limit);

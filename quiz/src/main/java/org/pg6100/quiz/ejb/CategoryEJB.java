@@ -11,9 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -162,20 +160,30 @@ public class CategoryEJB {
         return query.getResultList();
     }
 
-    public List<SubSubCategory> getSubSubCategoriesWithQuestions(){
+    public List<SubSubCategory> getSubSubCategoriesWithQuestions(Integer n){
         List<Question> questions = questionEJB.getAllQuestions();
-        if(questions.size() == 0){
+        if(questions.size() < n){
             return new ArrayList<>();
         }
 
-        Set<Long> subSubCategories = questions
-                .stream()
-                .map(q -> q.getSubSubCategory().getId())
-                .collect(toSet());
+        Map<Long, Integer> subSubWithQuestions = new HashMap<>();
+
+        questions.forEach(q -> subSubWithQuestions
+                .put(q.getSubSubCategory().getId(), 0));
+
+        for(Question q: questions){
+            int i = subSubWithQuestions.get(q.getSubSubCategory().getId());
+            i++;
+            subSubWithQuestions.put(q.getSubSubCategory().getId(), i);
+        }
+
+        List<Long> validIds = subSubWithQuestions.keySet().stream()
+                .filter(c -> subSubWithQuestions.get(c) >= n)
+                .collect(Collectors.toList());
 
         return getAllSubSubCategories()
                 .stream()
-                .filter(c -> subSubCategories.contains(c.getId()))
+                .filter(c -> validIds.contains(c.getId()))
                 .collect(Collectors.toList());
     }
 

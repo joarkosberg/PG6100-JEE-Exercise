@@ -22,8 +22,13 @@ public interface SubSubCategoryRestApi {
     @ApiOperation("Retrieve a list of all sub sub categories")
     @GET
     List<SubSubCategoryDto> getAllSubSubCategories(
+            @ApiParam("True if only want categories with quizzes")
             @QueryParam("withQuizzes")
-                    Boolean withQuizzes
+                    Boolean withQuizzes,
+            @ApiParam("True if only want categories with quizzes")
+            @DefaultValue("1")
+            @QueryParam("n")
+                    Integer n
     );
 
 

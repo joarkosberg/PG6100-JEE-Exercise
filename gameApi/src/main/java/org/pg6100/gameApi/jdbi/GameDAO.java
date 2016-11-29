@@ -26,6 +26,6 @@ public interface GameDAO {
     Game findById(@Bind("id") Long id);
 
     @SqlUpdate("insert into " + GAME_TABLE + " (questions, answeredQuestions) values (:questions, :answeredQuestions)")
-    int insert(@Bind("questions") Long[] questions,
+    Long insert(@Bind("questions") Long[] questions,
                @Bind("answeredQuestions") int answeredQuestions);
 }

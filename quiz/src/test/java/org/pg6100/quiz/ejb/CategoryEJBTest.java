@@ -145,7 +145,7 @@ public class CategoryEJBTest extends EJBTestBase {
         questionEJB.createQuestion(subSubCategory3, "Question", answers, 3);
         questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
 
-        List<SubSubCategory> subSubCategories = categoryEJB.getSubSubCategoriesWithQuestions();
+        List<SubSubCategory> subSubCategories = categoryEJB.getSubSubCategoriesWithQuestions(1);
         assertEquals(2, subSubCategories.size());
         assertTrue(subSubCategories.stream().anyMatch(c -> c.getId().equals(subSubCategory1)));
         assertFalse(subSubCategories.stream().anyMatch(c -> c.getId().equals(subSubCategory2)));

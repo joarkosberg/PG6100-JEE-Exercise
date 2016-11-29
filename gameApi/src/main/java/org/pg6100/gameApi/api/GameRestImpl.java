@@ -1,12 +1,15 @@
 package org.pg6100.gameApi.api;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import io.swagger.annotations.ApiParam;
+import org.pg6100.gameApi.helper.QuizApiCaller;
 import org.pg6100.gameApi.jdbi.GameDAO;
 import org.pg6100.gameApi.model.Game;
 
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 
 public class GameRestImpl implements GameRestApi{
@@ -20,6 +23,28 @@ public class GameRestImpl implements GameRestApi{
     @Override
     public List<Game> getActiveGames(Integer limit) {
         return gameDao.getAll(limit);
+    }
+
+    @Override
+    public Response createGame(Integer limit) {
+        if(limit < 1)
+            throw new WebApplicationException("Cannot set limit lower than 1", 400);
+
+        Long []quizList = QuizApiCaller.getRandomQuizzes(limit);
+        if (quizList.length < 1) {
+            throw new WebApplicationException("Something went wrong when collecting quizzes for this game", 500);
+        }
+
+        Long id;
+        try {
+            id = gameDao.insert(quizList, 0);
+        } catch (Exception e) {
+            throw new WebApplicationException(e.getMessage(), 500);
+        }
+
+        return Response.status(201)
+                .location(URI.create("/game/api/" + id))
+                .build();
     }
 
     /*

@@ -26,10 +26,10 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi {
     private CategoryEJB categoryEJB;
 
     @Override
-    public List<SubSubCategoryDto> getAllSubSubCategories(Boolean withQuizzes) {
+    public List<SubSubCategoryDto> getAllSubSubCategories(Boolean withQuizzes, Integer n) {
         if(withQuizzes != null)
             if(withQuizzes)
-                return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions());
+                return SubSubCategoryConverter.transform(categoryEJB.getSubSubCategoriesWithQuestions(n));
         return SubSubCategoryConverter.transform(categoryEJB.getAllSubSubCategories());
     }
 
