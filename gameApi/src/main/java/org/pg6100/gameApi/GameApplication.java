@@ -72,9 +72,9 @@ public class GameApplication extends Application<GameConfiguration> {
     }
 
     private void addExampleData(GameDAO gameDAO) {
-        gameDAO.insert(new Long[]{Long.valueOf(12), Long.valueOf(2), Long.valueOf(1),
-                Long.valueOf(132), Long.valueOf(122)}, 0);
-        gameDAO.insert(new Long[]{Long.valueOf(312), Long.valueOf(2), Long.valueOf(1),
+        gameDAO.insert(new Long[]{Long.valueOf(12), Long.valueOf(2), Long.valueOf(41),
+                Long.valueOf(132), Long.valueOf(122)}, 3);
+        gameDAO.insert(new Long[]{Long.valueOf(312), Long.valueOf(2), Long.valueOf(61),
                 Long.valueOf(132), Long.valueOf(132)}, 1);
         gameDAO.insert(new Long[]{Long.valueOf(12), Long.valueOf(62), Long.valueOf(12),
                 Long.valueOf(132), Long.valueOf(12), Long.valueOf(192), Long.valueOf(1)}, 2);

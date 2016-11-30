@@ -15,7 +15,8 @@ import java.util.List;
 })
 
 public interface GameRestApi {
-    String ID_PARAM ="The numeric id of the news";
+
+    
 
     @ApiOperation("Retrieve a set of active games")
     @GET
@@ -25,6 +26,8 @@ public interface GameRestApi {
             @QueryParam("n")
                     Integer limit);
 
+
+
     @ApiOperation("Create a new active game")
     @POST
     Response createGame(
@@ -32,4 +35,37 @@ public interface GameRestApi {
             @DefaultValue("5")
             @QueryParam("n")
                     Integer limit);
+
+
+
+    @ApiOperation("Retrieve game by id")
+    @GET
+    @Path("/{id}")
+    Game getGame(
+            @ApiParam("Id of wanted game")
+            @PathParam("id")
+                    Long id);
+
+
+
+    @ApiOperation("Retrieve a set of active games")
+    @POST
+    @Path("/{id}")
+    Boolean answerQuiz(
+            @ApiParam("Id of wanted game")
+            @PathParam("id")
+                    Long id,
+            @ApiParam("Limit games to get(default 5)")
+            @QueryParam("answer")
+                    Integer answer);
+
+
+
+    @ApiOperation("Retrieve a set of active games")
+    @DELETE
+    @Path("/{id}")
+    void deleteGame(
+            @ApiParam("Limit games to get(default 5)")
+            @PathParam("id")
+                    Long id);
 }

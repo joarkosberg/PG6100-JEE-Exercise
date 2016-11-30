@@ -4,7 +4,6 @@ import io.swagger.annotations.*;
 import io.swagger.jaxrs.PATCH;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.CategoryDto;
-import org.pg6100.quizApi.dto.SubCategoryDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -1,6 +1,5 @@
 package org.pg6100.gameApi.api;
 
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.gameApi.helper.QuizApiCaller;
 import org.pg6100.gameApi.jdbi.GameDAO;
@@ -43,8 +42,27 @@ public class GameRestImpl implements GameRestApi{
         }
 
         return Response.status(201)
-                .location(URI.create("/game/api/" + id))
+                .location(URI.create("/game/api/games/" + id))
                 .build();
+    }
+
+    @Override
+    public Game getGame(Long id) {
+        Game game = gameDao.findById(id);
+        if(game == null)
+            throw new WebApplicationException("No game with given id " + id, 404);
+
+        return game;
+    }
+
+    @Override
+    public Boolean answerQuiz(Long id, Integer answer) {
+        throw new WebApplicationException("Not yet implemented", 501);
+    }
+
+    @Override
+    public void deleteGame(Long id) {
+        throw new WebApplicationException("Not yet implemented", 501);
     }
 
     /*

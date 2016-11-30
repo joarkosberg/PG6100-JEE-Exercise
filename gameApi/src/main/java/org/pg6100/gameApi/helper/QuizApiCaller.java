@@ -17,8 +17,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class QuizApiCaller {
-    private static final String BASE_PATH = "localhost:8080/quiz/api/";
-    private static final String RANDOMQUIZZES_PATH = "/randomQuizzes";
+    private static final String BASE_PATH = "http://localhost:8080/quiz/api";
+    private static final String RANDOMQUIZZES_PATH = "/randomquizzes";
     private static final String SUBSUBCATEGORIES_PATH = "/subsubcategories";
 
     public static Long []getRandomQuizzes(Integer n) {
@@ -44,6 +44,8 @@ public class QuizApiCaller {
                 .queryParam("filter", category)
                 .build();
 
+        System.out.println("\n\nURI = " + uri.toString() + "\n\n");
+
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).post(null);
         checkIfError(response.getStatusInfo());
@@ -52,9 +54,9 @@ public class QuizApiCaller {
     }
 
     private static List<Long> getRandomSubSubcategories(Integer n) {
-        URI uri = UriBuilder.fromUri(BASE_PATH + SUBSUBCATEGORIES_PATH)
-                .queryParam("withQuizzes", true)
-                .queryParam("n", n).build();
+        URI uri = UriBuilder.fromUri(BASE_PATH + SUBSUBCATEGORIES_PATH +
+                "?withQuizzes=true&n=" + n)
+                .build();
 
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).get();
