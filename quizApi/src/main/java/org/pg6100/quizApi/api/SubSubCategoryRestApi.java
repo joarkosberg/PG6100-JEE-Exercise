@@ -25,7 +25,7 @@ public interface SubSubCategoryRestApi {
             @ApiParam("True if only want categories with quizzes")
             @QueryParam("withQuizzes")
                     Boolean withQuizzes,
-            @ApiParam("True if only want categories with quizzes")
+            @ApiParam("Minimum number of quizzes")
             @DefaultValue("1")
             @QueryParam("n")
                     Integer n

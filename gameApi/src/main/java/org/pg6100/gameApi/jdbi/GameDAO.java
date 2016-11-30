@@ -17,7 +17,8 @@ public interface GameDAO {
     @SqlUpdate("CREATE TABLE " + GAME_TABLE +
             " (id BIGINT AUTO_INCREMENT PRIMARY KEY," +
             " questions ARRAY," +
-            " answeredQuestions INT)")
+            " answeredQuestions INT," +
+            " currentQuestion VARCHAR(100))")
     void createGameTable();
 
     @SqlQuery("select * from " + GAME_TABLE + " limit :limit")
@@ -26,8 +27,18 @@ public interface GameDAO {
     @SqlQuery("select * from " + GAME_TABLE + " where id = :id")
     Game findById(@Bind("id") Long id);
 
-    @SqlUpdate("insert into " + GAME_TABLE + " (questions, answeredQuestions) values (:questions, :answeredQuestions)")
+    @SqlUpdate("delete from " + GAME_TABLE + " where id = :id")
+    int deleteById(@Bind("id") Long id);
+
+    @SqlUpdate("insert into " + GAME_TABLE + " (questions, answeredQuestions, currentQuestion) values (:questions, :answeredQuestions, :currentQuestion)")
     @GetGeneratedKeys
     Long insert(@Bind("questions") Long[] questions,
-               @Bind("answeredQuestions") int answeredQuestions);
+                @Bind("answeredQuestions") int answeredQuestions,
+                @Bind("currentQuestion") String currentQuestion);
+
+    @SqlUpdate("update " + GAME_TABLE + " set answeredQuestions = :answeredQuestions, currentQuestion = :currentQuestion" +
+            " where id = :id")
+    int update(@Bind("id") Long id,
+               @Bind("answeredQuestions") int answeredQuestions,
+               @Bind("currentQuestion") String currentQuestion);
 }

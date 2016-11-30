@@ -51,11 +51,18 @@ public class QuestionRestImpl implements QuestionRestApi {
     }
 
     @Override
-    public QuestionDto getQuestion(Long id) {
+    public QuestionDto getQuestion(Long id, Boolean noAnswer) {
         if(!questionEJB.isPresent(id)){
             throw new WebApplicationException("Cannot find question with id: " + id, 404);
         }
-        return QuestionConverter.transform(questionEJB.getQuestion(id));
+
+        QuestionDto questionDto = QuestionConverter.transform(questionEJB.getQuestion(id));
+
+        if(noAnswer != null && noAnswer){
+            questionDto.correctAnswer = null;
+        }
+
+        return questionDto;
     }
 
     @Override

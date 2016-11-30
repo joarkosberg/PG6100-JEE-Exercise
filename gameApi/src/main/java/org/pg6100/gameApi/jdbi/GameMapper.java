@@ -12,6 +12,6 @@ public class GameMapper implements ResultSetMapper<Game> {
     @Override
     public Game map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
         return new Game(resultSet.getLong("id"), (Long[])resultSet.getArray("questions").getArray(),
-                resultSet.getInt("answeredQuestions"));
+                resultSet.getInt("answeredQuestions"), resultSet.getString("currentQuestion"));
     }
 }

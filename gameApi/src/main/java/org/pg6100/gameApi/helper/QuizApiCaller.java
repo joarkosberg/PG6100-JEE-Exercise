@@ -21,6 +21,10 @@ public class QuizApiCaller {
     private static final String RANDOMQUIZZES_PATH = "/randomquizzes";
     private static final String SUBSUBCATEGORIES_PATH = "/subsubcategories";
 
+    public static boolean checkAnswer(Long questionId, Integer answer){
+
+    }
+
     public static Long []getRandomQuizzes(Integer n) {
         List<Long> subSubCategories = getRandomSubSubcategories(n);
 
@@ -43,8 +47,6 @@ public class QuizApiCaller {
                 .queryParam("n", limit)
                 .queryParam("filter", category)
                 .build();
-
-        System.out.println("\n\nURI = " + uri.toString() + "\n\n");
 
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).post(null);

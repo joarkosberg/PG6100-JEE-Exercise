@@ -18,13 +18,18 @@ public class Game {
     @JsonProperty
     private int answeredQuestions;
 
+    @NotNull
+    @JsonProperty
+    private String currentQuestion;
+
     public Game() {
     }
 
-    public Game(Long id, Long[] questions, int answeredQuestions) {
+    public Game(Long id, Long[] questions, int answeredQuestions, String currentQuestion) {
         this.id = id;
         this.questions = questions;
         this.answeredQuestions = answeredQuestions;
+        this.currentQuestion = currentQuestion;
     }
 
     public Long getId() {
@@ -49,5 +54,13 @@ public class Game {
 
     public void setAnsweredQuestions(int answeredQuestions) {
         this.answeredQuestions = answeredQuestions;
+    }
+
+    public String getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void setCurrentQuestion(String currentQuestion) {
+        this.currentQuestion = currentQuestion;
     }
 }

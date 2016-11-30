@@ -42,7 +42,10 @@ public interface QuestionRestApi {
     QuestionDto getQuestion(
             @ApiParam("Id of the question")
             @PathParam("id")
-                    Long id);
+                    Long id,
+            @ApiParam("Specify if want answer")
+            @QueryParam("noAnswer")
+                    Boolean noAnswer);
 
     @ApiOperation("Update specified question by id")
     @PUT

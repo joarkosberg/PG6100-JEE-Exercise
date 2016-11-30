@@ -13,6 +13,8 @@ import java.util.List;
 
 public class GameRestImpl implements GameRestApi{
 
+    private static final String QUIZ_PATH = "http://localhost:8080/quiz/api/quizzes/";
+
     private GameDAO gameDao;
 
     public GameRestImpl (GameDAO gameDao) {
@@ -36,7 +38,8 @@ public class GameRestImpl implements GameRestApi{
 
         Long id;
         try {
-            id = gameDao.insert(quizList, 0);
+            String path = QUIZ_PATH + quizList[0].toString() + "?noAnswer=true";
+            id = gameDao.insert(quizList, 0, path);
         } catch (Exception e) {
             throw new WebApplicationException(e.getMessage(), 500);
         }
@@ -49,6 +52,7 @@ public class GameRestImpl implements GameRestApi{
     @Override
     public Game getGame(Long id) {
         Game game = gameDao.findById(id);
+
         if(game == null)
             throw new WebApplicationException("No game with given id " + id, 404);
 
@@ -56,13 +60,37 @@ public class GameRestImpl implements GameRestApi{
     }
 
     @Override
-    public Boolean answerQuiz(Long id, Integer answer) {
-        throw new WebApplicationException("Not yet implemented", 501);
+    public Response answerQuiz(Long id, Integer answer) {
+        Game game = gameDao.findById(id);
+
+        if(game == null)
+            return Response.status(404).build(); // Feil id
+
+        boolean correct = QuizApiCaller.checkAnswer(game.getQuestions()[game.getAnsweredQuestions()], answer);
+
+        if(!correct){
+            gameDao.deleteById(id);
+            return Response.status(409).build(); // Feil svar
+        } else {
+            int answeredQuestions = game.getAnsweredQuestions();
+            answeredQuestions++;
+            if(answeredQuestions >= game.getQuestions().length) {
+                gameDao.deleteById(id);
+                Response.status(204).build(); //Quiz ferdig
+            }
+
+            String path = QUIZ_PATH + game.getQuestions()[answeredQuestions].toString() + "?noAnswer=true";
+            gameDao.update(id, answeredQuestions, path);
+
+            return Response.status(200).build(); //Quiz fortsetter
+        }
     }
 
     @Override
     public void deleteGame(Long id) {
-        throw new WebApplicationException("Not yet implemented", 501);
+        int response = gameDao.deleteById(id);
+        if(response == 0)
+            throw new WebApplicationException("Id was invalid, nothing deleted", 404);
     }
 
     /*

@@ -49,7 +49,6 @@ public class GameApplication extends Application<GameConfiguration> {
 
         //Init H2 db and test data
         gameDAO.createGameTable();
-        addExampleData(gameDAO);
 
         environment.jersey().setUrlPattern("/game/api/*");
         environment.jersey().register(gameResource);
@@ -69,14 +68,5 @@ public class GameApplication extends Application<GameConfiguration> {
         //Add further configuration to activate SWAGGER
         environment.jersey().register(new io.swagger.jaxrs.listing.ApiListingResource());
         environment.jersey().register(new io.swagger.jaxrs.listing.SwaggerSerializers());
-    }
-
-    private void addExampleData(GameDAO gameDAO) {
-        gameDAO.insert(new Long[]{Long.valueOf(12), Long.valueOf(2), Long.valueOf(41),
-                Long.valueOf(132), Long.valueOf(122)}, 3);
-        gameDAO.insert(new Long[]{Long.valueOf(312), Long.valueOf(2), Long.valueOf(61),
-                Long.valueOf(132), Long.valueOf(132)}, 1);
-        gameDAO.insert(new Long[]{Long.valueOf(12), Long.valueOf(62), Long.valueOf(12),
-                Long.valueOf(132), Long.valueOf(12), Long.valueOf(192), Long.valueOf(1)}, 2);
     }
 }
