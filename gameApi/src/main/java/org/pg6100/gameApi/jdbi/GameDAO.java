@@ -14,7 +14,7 @@ public interface GameDAO {
 
     String GAME_TABLE = "GAME_TABLE";
 
-    @SqlUpdate("CREATE TABLE " + GAME_TABLE +
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS " + GAME_TABLE +
             " (id BIGINT AUTO_INCREMENT PRIMARY KEY," +
             " questions ARRAY," +
             " answeredQuestions INT," +

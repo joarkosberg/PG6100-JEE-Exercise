@@ -1,6 +1,8 @@
 package org.pg6100.gameApi.helper;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ServerErrorException;
@@ -20,9 +22,21 @@ public class QuizApiCaller {
     private static final String BASE_PATH = "http://localhost:8080/quiz/api";
     private static final String RANDOMQUIZZES_PATH = "/randomquizzes";
     private static final String SUBSUBCATEGORIES_PATH = "/subsubcategories";
+    private static final String QUIZZES_PATH = "/quizzes";
 
-    public static boolean checkAnswer(Long questionId, Integer answer){
+    public static Integer getAnswer(Long questionId){
+        URI uri = UriBuilder.fromUri(BASE_PATH + QUIZZES_PATH + "/" + questionId.toString())
+                .build();
 
+        Client client = ClientBuilder.newClient();
+        Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).get();
+        checkIfError(response.getStatusInfo());
+
+        JsonParser parser = new JsonParser();
+        JsonObject json =(JsonObject) parser.parse(response.readEntity(String.class));
+
+        Integer answer = json.get("correctAnswer").getAsInt();
+        return answer;
     }
 
     public static Long []getRandomQuizzes(Integer n) {

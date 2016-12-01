@@ -82,14 +82,6 @@
             <artifactId>swagger-hibernate-validations</artifactId>
         </dependency>
 
-        <!--
-            Note: usually in a DropWizard application, we would
-            not need to define these dependencies, as already
-            provided by DropWizard indirectly.
-            However, as in the root pom file we define them as
-            scope "provided" (to use them in Widlfly), here we
-            need to redefine them as "compile"
-        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -115,6 +107,10 @@
             <artifactId>jackson-databind</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+        </dependency>
 
         <!-- Misc -->
         <dependency>
@@ -131,18 +127,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
 
-            <!--
-                When you package a jar module with "mvn package",
-                the created Jar will only contain the classes in the
-                module, and not the third-party libraries.
-
-                To make a jar self executable, you need a so called
-                "Fat Jar", with all dependencies. This plugin does
-                achieve it. You can then run the application with:
-
-                java -jar target/dw_counter-0.0.1-SNAPSHOT.jar  server
-                (where "server" is just an input parameter of "main(String[] args)")
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -171,6 +155,36 @@
                         </transformer>
                     </transformers>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>init</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>deploy</goal>
+                        </goals>
+                        <configuration>
+                            <javaOpts>
+                                <!-- Make it point to WireMock -->
+                                <javaOpt>-DfixerWebAddress=localhost:8099</javaOpt>
+                            </javaOpts>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>shutdown</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>undeploy</goal>
+                            <goal>shutdown</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

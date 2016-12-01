@@ -66,17 +66,18 @@ public class GameRestImpl implements GameRestApi{
         if(game == null)
             return Response.status(404).build(); // Feil id
 
-        boolean correct = QuizApiCaller.checkAnswer(game.getQuestions()[game.getAnsweredQuestions()], answer);
+        Integer theAnswer = QuizApiCaller.getAnswer(game.getQuestions()[game.getAnsweredQuestions()]);
 
-        if(!correct){
+        if(answer != theAnswer){
             gameDao.deleteById(id);
             return Response.status(409).build(); // Feil svar
         } else {
             int answeredQuestions = game.getAnsweredQuestions();
             answeredQuestions++;
+
             if(answeredQuestions >= game.getQuestions().length) {
                 gameDao.deleteById(id);
-                Response.status(204).build(); //Quiz ferdig
+                return Response.status(204).build(); //Quiz ferdig
             }
 
             String path = QUIZ_PATH + game.getQuestions()[answeredQuestions].toString() + "?noAnswer=true";
@@ -93,31 +94,6 @@ public class GameRestImpl implements GameRestApi{
             throw new WebApplicationException("Id was invalid, nothing deleted", 404);
     }
 
-    /*
-
-    String code = "302f56c7ad8e8c82";
-        String country = "Norway";
-        String city = "Oslo";
-
-        URI uri = UriBuilder
-                .fromUri("http://api.wunderground.com/api/"
-                        + code +"/geolookup/conditions/forecast/q/"+country+"/"+city+".json")
-                .port(80)
-                .build();
-
-        Client client = ClientBuilder.newClient();
-        Response response = client.target(uri).request("application/json").get();
-
-        String result = response.readEntity(String.class);
-        System.out.println("Result as string : " + result);
-
-    //just extract one element of interest
-    JsonParser parser = new JsonParser();
-    JsonObject json =(JsonObject) parser.parse(result);
-    String temperature = json.get("current_observation").getAsJsonObject().get("temp_c").getAsString();
-
-        System.out.println("Temperature in Oslo: "+temperature+" C'");
-     */
     private WebApplicationException wrapException(Exception e) throws WebApplicationException {
         Throwable cause = Throwables.getRootCause(e);
         if (cause instanceof ConstraintViolationException) {
