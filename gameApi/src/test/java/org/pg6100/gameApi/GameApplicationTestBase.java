@@ -31,7 +31,7 @@ public abstract class GameApplicationTestBase {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         wiremockServer = new WireMockServer(
-                wireMockConfig().port(8099).notifier(new ConsoleNotifier(true))
+                wireMockConfig().port(8080).notifier(new ConsoleNotifier(true))
         );
         wiremockServer.start();
     }

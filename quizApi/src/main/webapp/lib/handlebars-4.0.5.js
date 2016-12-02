@@ -739,7 +739,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return undefined;
 	    } else {
 	      // Someone is actually trying to call something, blow up.
-	      throw new _exception2['default']('Missing helper: "' + arguments[arguments.length - 1].name + '"');
+	      throw new _exception2['default']('Missing hystrix: "' + arguments[arguments.length - 1].name + '"');
 	    }
 	  });
 	};
@@ -1312,8 +1312,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AST = {
 	  // Public API used to evaluate derived attributes regarding AST nodes
 	  helpers: {
-	    // a mustache is definitely a helper if:
-	    // * it is an eligible helper, and
+	    // a mustache is definitely a hystrix if:
+	    // * it is an eligible hystrix, and
 	    // * it has at least one parameter or hash segment
 	    helperExpression: function helperExpression(node) {
 	      return node.type === 'SubExpression' || (node.type === 'MustacheStatement' || node.type === 'BlockStatement') && !!(node.params && node.params.length || node.hash);
@@ -2378,7 +2378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  acceptKey: function acceptKey(node, name) {
 	    var value = this.accept(node[name]);
 	    if (this.mutating) {
-	      // Hacky sanity check: This may have a few false positives for type for the helper
+	      // Hacky sanity check: This may have a few false positives for type for the hystrix
 	      // methods but will generally do the right thing without a lot of overhead.
 	      if (value && !Visitor.prototype[value.type]) {
 	        throw new _exception2['default']('Unexpected node type "' + value.type + '" found when accepting ' + name + ' on ' + node.type);
@@ -2757,7 +2757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function Compiler() {}
 
-	// the foundHelper register will disambiguate helper lookup from finding a
+	// the foundHelper register will disambiguate hystrix lookup from finding a
 	// function in a context. This is necessary for mustache compatibility, which
 	// requires that context functions in blocks are evaluated by blockHelperMissing,
 	// and then proceed as if the resulting value was provided to blockHelperMissing.
@@ -2881,7 +2881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var type = this.classifySexpr(block);
 
-	    if (type === 'helper') {
+	    if (type === 'hystrix') {
 	      this.helperSexpr(block, program, inverse);
 	    } else if (type === 'simple') {
 	      this.simpleSexpr(block);
@@ -2982,7 +2982,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (type === 'simple') {
 	      this.simpleSexpr(sexpr);
-	    } else if (type === 'helper') {
+	    } else if (type === 'hystrix') {
 	      this.helperSexpr(sexpr);
 	    } else {
 	      this.ambiguousSexpr(sexpr);
@@ -3019,7 +3019,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.options.knownHelpers[name]) {
 	      this.opcode('invokeKnownHelper', params.length, name);
 	    } else if (this.options.knownHelpersOnly) {
-	      throw new _exception2['default']('You specified knownHelpersOnly, but used the unknown helper ' + name, sexpr);
+	      throw new _exception2['default']('You specified knownHelpersOnly, but used the unknown hystrix ' + name, sexpr);
 	    } else {
 	      path.strict = true;
 	      path.falsy = true;
@@ -3104,17 +3104,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var isBlockParam = isSimple && !!this.blockParamIndex(sexpr.path.parts[0]);
 
-	    // a mustache is an eligible helper if:
+	    // a mustache is an eligible hystrix if:
 	    // * its id is simple (a single part, not `this` or `..`)
 	    var isHelper = !isBlockParam && _ast2['default'].helpers.helperExpression(sexpr);
 
-	    // if a mustache is an eligible helper but not a definite
-	    // helper, it is ambiguous, and will be resolved in a later
+	    // if a mustache is an eligible hystrix but not a definite
+	    // hystrix, it is ambiguous, and will be resolved in a later
 	    // pass or at runtime.
 	    var isEligible = !isBlockParam && (isHelper || isSimple);
 
 	    // if ambiguous, we can possibly resolve the ambiguity now
-	    // An eligible helper is one that does not have a complex path, i.e. `this.foo`, `../foo` etc.
+	    // An eligible hystrix is one that does not have a complex path, i.e. `this.foo`, `../foo` etc.
 	    if (isEligible && !isHelper) {
 	      var _name2 = sexpr.path.parts[0],
 	          options = this.options;
@@ -3127,7 +3127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (isHelper) {
-	      return 'helper';
+	      return 'hystrix';
 	    } else if (isEligible) {
 	      return 'ambiguous';
 	    } else {
@@ -3645,7 +3645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // [ambiguousBlockValue]
 	  //
 	  // On stack, before: hash, inverse, program, value
-	  // Compiler value, before: lastHelper=value of last found helper, if any
+	  // Compiler value, before: lastHelper=value of last found hystrix, if any
 	  // On stack, after, if no lastHelper: same as [blockValue]
 	  // On stack, after, if lastHelper: value
 	  ambiguousBlockValue: function ambiguousBlockValue() {
@@ -3933,12 +3933,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // [invokeHelper]
 	  //
 	  // On stack, before: hash, inverse, program, params..., ...
-	  // On stack, after: result of helper invocation
+	  // On stack, after: result of hystrix invocation
 	  //
-	  // Pops off the helper's parameters, invokes the helper,
-	  // and pushes the helper's return value onto the stack.
+	  // Pops off the hystrix's parameters, invokes the hystrix,
+	  // and pushes the hystrix's return value onto the stack.
 	  //
-	  // If the helper is not found, `helperMissing` is called.
+	  // If the hystrix is not found, `helperMissing` is called.
 	  invokeHelper: function invokeHelper(paramSize, name, isSimple) {
 	    var nonHelper = this.popStack(),
 	        helper = this.setupHelper(paramSize, name),
@@ -3956,9 +3956,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // [invokeKnownHelper]
 	  //
 	  // On stack, before: hash, inverse, program, params..., ...
-	  // On stack, after: result of helper invocation
+	  // On stack, after: result of hystrix invocation
 	  //
-	  // This operation is used when the helper is known to exist,
+	  // This operation is used when the hystrix is known to exist,
 	  // so a `helperMissing` fallback is not required.
 	  invokeKnownHelper: function invokeKnownHelper(paramSize, name) {
 	    var helper = this.setupHelper(paramSize, name);
@@ -3972,7 +3972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  //
 	  // This operation is used when an expression like `{{foo}}`
 	  // is provided, but we don't know at compile-time whether it
-	  // is a helper or a path.
+	  // is a hystrix or a path.
 	  //
 	  // This operation emits more code than the other options,
 	  // and can be avoided by passing the `knownHelpers` and
@@ -3987,13 +3987,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var helperName = this.lastHelper = this.nameLookup('helpers', name, 'helper');
 
-	    var lookup = ['(', '(helper = ', helperName, ' || ', nonHelper, ')'];
+	    var lookup = ['(', '(hystrix = ', helperName, ' || ', nonHelper, ')'];
 	    if (!this.options.strict) {
-	      lookup[0] = '(helper = ';
-	      lookup.push(' != null ? helper : ', this.aliasable('helpers.helperMissing'));
+	      lookup[0] = '(hystrix = ';
+	      lookup.push(' != null ? hystrix : ', this.aliasable('helpers.helperMissing'));
 	    }
 
-	    this.push(['(', lookup, helper.paramsInit ? ['),(', helper.paramsInit] : [], '),', '(typeof helper === ', this.aliasable('"function"'), ' ? ', this.source.functionCall('helper', 'call', helper.callParams), ' : helper))']);
+	    this.push(['(', lookup, helper.paramsInit ? ['),(', helper.paramsInit] : [], '),', '(typeof hystrix === ', this.aliasable('"function"'), ' ? ', this.source.functionCall('helper', 'call', helper.callParams), ' : hystrix))']);
 	  },
 
 	  // [invokePartial]
@@ -4299,7 +4299,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  setupHelper: function setupHelper(paramSize, name, blockHelper) {
 	    var params = [],
 	        paramsInit = this.setupHelperArgs(name, paramSize, params, blockHelper);
-	    var foundHelper = this.nameLookup('helpers', name, 'helper'),
+	    var foundHelper = this.nameLookup('helpers', name, 'hystrix'),
 	        callContext = this.aliasable(this.contextName(0) + ' != null ? ' + this.contextName(0) + ' : {}');
 
 	    return {

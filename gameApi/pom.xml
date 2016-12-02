@@ -46,6 +46,10 @@
             <artifactId>h2</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -157,6 +161,7 @@
                 </configuration>
             </plugin>
 
+            <!--
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
@@ -170,8 +175,7 @@
                         </goals>
                         <configuration>
                             <javaOpts>
-                                <!-- Make it point to WireMock -->
-                                <javaOpt>-DfixerWebAddress=localhost:8099</javaOpt>
+                                <javaOpt>-DfixerWebAddress=localhost:8080</javaOpt>
                             </javaOpts>
                         </configuration>
                     </execution>
@@ -186,6 +190,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
         </plugins>
     </build>
 </project>

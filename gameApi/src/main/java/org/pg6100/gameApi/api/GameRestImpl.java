@@ -1,7 +1,8 @@
 package org.pg6100.gameApi.api;
 
 import com.google.common.base.Throwables;
-import org.pg6100.gameApi.helper.QuizApiCaller;
+import org.pg6100.gameApi.hystrix.AnswerHystrixCommand;
+import org.pg6100.gameApi.hystrix.QuizzesHystrixCommand;
 import org.pg6100.gameApi.jdbi.GameDAO;
 import org.pg6100.gameApi.model.Game;
 
@@ -31,8 +32,8 @@ public class GameRestImpl implements GameRestApi{
         if(limit < 1)
             throw new WebApplicationException("Cannot set limit lower than 1", 400);
 
-        Long []quizList = QuizApiCaller.getRandomQuizzes(limit);
-        if (quizList.length < 1) {
+        Long []quizList = new QuizzesHystrixCommand(limit).execute();
+        if (quizList == null || quizList.length < 1) {
             throw new WebApplicationException("Something went wrong when collecting quizzes for this game", 500);
         }
 
@@ -66,7 +67,12 @@ public class GameRestImpl implements GameRestApi{
         if(game == null)
             return Response.status(404).build(); // Feil id
 
-        Integer theAnswer = QuizApiCaller.getAnswer(game.getQuestions()[game.getAnsweredQuestions()]);
+        //Integer theAnswer = QuizApiCaller.getAnswer(game.getQuestions()[game.getAnsweredQuestions()]);
+
+        Integer theAnswer = new AnswerHystrixCommand(game.getQuestions()[game.getAnsweredQuestions()]).execute();
+        if(theAnswer == null){
+            throw new WebApplicationException("Something went wrong when getting the answer for this game", 500);
+        }
 
         if(answer != theAnswer){
             gameDao.deleteById(id);

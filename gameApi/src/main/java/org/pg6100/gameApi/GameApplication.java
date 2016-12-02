@@ -1,5 +1,6 @@
 package org.pg6100.gameApi;
 
+import com.netflix.config.ConfigurationManager;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -10,6 +11,7 @@ import io.dropwizard.setup.Environment;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.pg6100.gameApi.api.GameRestImpl;
 import org.pg6100.gameApi.jdbi.GameDAO;
 
@@ -64,6 +66,18 @@ public class GameApplication extends Application<GameConfiguration> {
         beanConfig.setBasePath("/game/api");
         beanConfig.setResourcePackage("org.pg6100.gameApi.api");
         beanConfig.setScan(true);
+
+        //Hystrix config
+        AbstractConfiguration conf = ConfigurationManager.getConfigInstance();
+        conf.setProperty("hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds", 500);
+
+        // how many failures before activating the CB?
+        conf.setProperty("hystrix.command.default.circuitBreaker.requestVolumeThreshold", 2);
+        conf.setProperty("hystrix.command.default.circuitBreaker.errorThresholdPercentage", 50);
+        //for how long should the CB stop requests?
+        //after this, 1 single request will try to check if remote server is ok
+
+        conf.setProperty("hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds", 5000);
 
         //Add further configuration to activate SWAGGER
         environment.jersey().register(new io.swagger.jaxrs.listing.ApiListingResource());

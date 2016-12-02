@@ -18329,7 +18329,7 @@ function isStopIteration(exception) {
     );
 }
 
-// FIXME: Remove this helper and Q.return once ES6 generators are in
+// FIXME: Remove this hystrix and Q.return once ES6 generators are in
 // SpiderMonkey.
 var QReturnValue;
 if (typeof ReturnValue !== "undefined") {

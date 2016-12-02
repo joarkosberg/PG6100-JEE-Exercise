@@ -1,45 +1,35 @@
-package org.pg6100.gameApi.helper;
+package org.pg6100.gameApi.hystrix;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
 
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class QuizApiCaller {
+public class QuizzesHystrixCommand extends HystrixCommand<Long []>{
     private static final String BASE_PATH = "http://localhost:8080/quiz/api";
     private static final String RANDOMQUIZZES_PATH = "/randomquizzes";
     private static final String SUBSUBCATEGORIES_PATH = "/subsubcategories";
-    private static final String QUIZZES_PATH = "/quizzes";
 
-    public static Integer getAnswer(Long questionId){
-        URI uri = UriBuilder.fromUri(BASE_PATH + QUIZZES_PATH + "/" + questionId.toString())
-                .build();
+    private final Integer n;
 
-        Client client = ClientBuilder.newClient();
-        Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).get();
-        checkIfError(response.getStatusInfo());
-
-        JsonParser parser = new JsonParser();
-        JsonObject json =(JsonObject) parser.parse(response.readEntity(String.class));
-
-        Integer answer = json.get("correctAnswer").getAsInt();
-        return answer;
+    public QuizzesHystrixCommand(Integer n) {
+        super(HystrixCommandGroupKey.Factory.asKey("Quizzes"));
+        this.n = n;
     }
 
-    public static Long []getRandomQuizzes(Integer n) {
+    @Override
+    public Long[] run() throws Exception {
         List<Long> subSubCategories = getRandomSubSubcategories(n);
 
         Response response;
@@ -56,7 +46,7 @@ public class QuizApiCaller {
         return quizList;
     }
 
-    private static Response getQuizzes(Integer limit, Long category) {
+    private Response getQuizzes(Integer limit, Long category) {
         URI uri = UriBuilder.fromUri(BASE_PATH + RANDOMQUIZZES_PATH)
                 .queryParam("n", limit)
                 .queryParam("filter", category)
@@ -64,19 +54,17 @@ public class QuizApiCaller {
 
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).post(null);
-        checkIfError(response.getStatusInfo());
 
         return response;
     }
 
-    private static List<Long> getRandomSubSubcategories(Integer n) {
+    private List<Long> getRandomSubSubcategories(Integer n) {
         URI uri = UriBuilder.fromUri(BASE_PATH + SUBSUBCATEGORIES_PATH +
                 "?withQuizzes=true&n=" + n)
                 .build();
 
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).get();
-        checkIfError(response.getStatusInfo());
 
         Gson gson = new Gson();
         SubSubIds[] array = gson.fromJson(response.readEntity(String.class), SubSubIds[].class);
@@ -86,16 +74,14 @@ public class QuizApiCaller {
                 .collect(Collectors.toList());
     }
 
-    private static void checkIfError(Response.StatusType status) {
-        if (status.getFamily().equals(Response.Status.Family.CLIENT_ERROR)) {
-            throw new ClientErrorException(status.getStatusCode());
-        }
-        if (status.getFamily().equals(Response.Status.Family.SERVER_ERROR)) {
-            throw new ServerErrorException(status.getStatusCode());
-        }
+    private class SubSubIds {
+        Long id;
     }
 
-    private static class SubSubIds {
-        Long id;
+    @Override
+    protected Long[] getFallback(){
+        return null;
+        //throw new WebApplicationException("Could'nt retrieve quizzes, quiz service down. " +
+                //"Please try again shortly!", 503);
     }
 }
