@@ -17,6 +17,7 @@
         <module>quizApi</module>
         <module>jacoco</module>
         <module>gameApi</module>
+        <module>quizSoap</module>
     </modules>
 
 
