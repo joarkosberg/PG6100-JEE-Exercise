@@ -9,6 +9,9 @@ import org.pg6100.quizApi.dto.QuestionDto;
 import org.pg6100.quizApi.dto.converter.QuestionConverter;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
         Formats.BASE_JSON
 })
 
+@Stateless
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class RandomQuizRest {
 
     @EJB
