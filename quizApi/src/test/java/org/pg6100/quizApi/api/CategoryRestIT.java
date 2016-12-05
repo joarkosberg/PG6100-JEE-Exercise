@@ -65,22 +65,26 @@ public class CategoryRestIT extends TestBase {
 
         //now change text with PUT
         String updatedText = "new updated categoryname";
-        given().contentType(ContentType.JSON)
+        String newLocation = given().contentType(ContentType.JSON)
                 .pathParam("id", id)
                 .body(new CategoryDto(id, updatedText))
                 .put("/id/{id}")
                 .then()
-                .statusCode(301);
+                .statusCode(301).extract().header("location");
 
-        /*
+        given().contentType(ContentType.JSON)
+                .body(new CategoryDto(id, updatedText))
+                .put(newLocation)
+                .then()
+                .statusCode(204);
+
         //was the PUT fine?
         get().then()
                 .statusCode(200)
                 .body("size()", is(1));
-        get("/id/" + id)
+        get("/" + id)
                 .then()
                 .body("name", is(updatedText));
-                */
     }
 
     //Patch category

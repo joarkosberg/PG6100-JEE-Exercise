@@ -32,6 +32,9 @@ public class CategorySoapImpl implements CategorySoapApi{
 
     @Override
     public Long createCategory(CategoryDto dto) {
+        if(dto.id != null){
+            return null;
+        }
         Long id = categoryEJB.createNewCategory(dto.name);
         return id;
     }
