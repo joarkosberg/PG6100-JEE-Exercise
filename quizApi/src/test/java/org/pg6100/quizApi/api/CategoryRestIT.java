@@ -4,13 +4,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pg6100.quizApi.dto.CategoryDto;
-import org.pg6100.quizApi.dto.QuestionDto;
-import org.pg6100.quizApi.dto.SubCategoryDto;
-import org.pg6100.quizApi.dto.SubSubCategoryDto;
+import org.pg6100.quizApi.dto.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -28,11 +28,11 @@ public class CategoryRestIT extends TestBase {
     @Test
     public void testCreateAndGetCategory() {
         String category = "c1";
-        CategoryDto dto = new CategoryDto(null, category);
+        CategoryDto dto = new CategoryDto(null, category, null);
 
         get().then()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("list.size()", is(0));
 
         given().contentType(ContentType.JSON)
                 .body(dto)
@@ -43,20 +43,20 @@ public class CategoryRestIT extends TestBase {
 
         get().then()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("list.size()", is(1));
 
-        createCategory(new CategoryDto(null, "c2"));
+        createCategory(new CategoryDto(null, "c2", null));
 
         get().then()
                 .statusCode(200)
-                .body("size()", is(2));
+                .body("list.size()", is(2));
     }
 
     @Test
     public void testUpdateCategory() {
         //first create with a POST
         String text = "cat";
-        String id = createCategory(new CategoryDto(null, text));
+        String id = createCategory(new CategoryDto(null, text, null));
 
         //check if POST was fine
         get("/id/" + id)
@@ -67,13 +67,13 @@ public class CategoryRestIT extends TestBase {
         String updatedText = "new updated categoryname";
         String newLocation = given().contentType(ContentType.JSON)
                 .pathParam("id", id)
-                .body(new CategoryDto(id, updatedText))
+                .body(new CategoryDto(id, updatedText, null))
                 .put("/id/{id}")
                 .then()
                 .statusCode(301).extract().header("location");
 
         given().contentType(ContentType.JSON)
-                .body(new CategoryDto(id, updatedText))
+                .body(new CategoryDto(id, updatedText, null))
                 .put(newLocation)
                 .then()
                 .statusCode(204);
@@ -81,7 +81,7 @@ public class CategoryRestIT extends TestBase {
         //was the PUT fine?
         get().then()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("list.size()", is(1));
         get("/" + id)
                 .then()
                 .body("name", is(updatedText));
@@ -92,7 +92,7 @@ public class CategoryRestIT extends TestBase {
     public void testPatchCategoryName() {
         //Create
         String categoryName = "cat";
-        CategoryDto categoryDto = new CategoryDto(null, categoryName);
+        CategoryDto categoryDto = new CategoryDto(null, categoryName, null);
         categoryDto.id = createCategory(categoryDto);
 
         get("/id/" + categoryDto.id)
@@ -117,18 +117,18 @@ public class CategoryRestIT extends TestBase {
 
     @Test //TODO WAY TOO LONG TEST/METHOD (All tests under this one)
     public void testGetCategoriesWithQuizzes(){
-        CategoryDto category1 = new CategoryDto(null, "cat1");
+        CategoryDto category1 = new CategoryDto(null, "cat1", null);
         category1.id = createCategory(category1);
-        CategoryDto category2 = new CategoryDto(null, "cat2");
+        CategoryDto category2 = new CategoryDto(null, "cat2", null);
         category2.id = createCategory(category2);
-        CategoryDto category3 = new CategoryDto(null, "cat3");
+        CategoryDto category3 = new CategoryDto(null, "cat3", null);
         category3.id = createCategory(category3);
 
-        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1);
+        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1, null);
         subCategory1.id = createSubCategory(subCategory1);
-        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2);
+        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2, null);
         subCategory2.id = createSubCategory(subCategory2);
-        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3);
+        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3, null);
         subCategory3.id = createSubCategory(subCategory3);
 
         SubSubCategoryDto subSubCategory1 = new SubSubCategoryDto(null, "subsub1", subCategory1);
@@ -150,38 +150,45 @@ public class CategoryRestIT extends TestBase {
         //Categories counted
         get().then()
                 .statusCode(200)
-                .body("size()", is(3));
+                .body("list.size()", is(3));
 
         //Categories with quizzes counted
         get("/withquizzes")
                 .then()
                 .statusCode(200)
-                .body("size()", is(2));
+                .body("list.size()", is(2));
 
-        List<CategoryDto> categories = Arrays.asList(given().accept(ContentType.JSON)
+        ListDto<?> categories = given()
+                .accept(ContentType.JSON)
                 .get("/withquizzes")
                 .then()
                 .statusCode(200)
-                .extract().as(CategoryDto[].class));
+                .extract()
+                .as(ListDto.class);
 
-        assertTrue(categories.stream().anyMatch(c -> c.id.equals(category1.id)));
-        assertFalse(categories.stream().anyMatch(c -> c.id.equals(category2.id)));
+        List<String> ids = new ArrayList<>();
+        categories.list.stream()
+                .map(c -> ((Map) c).get("id"))
+                .forEach(id -> ids.add(id.toString()));
+
+        assertTrue(ids.stream().anyMatch(c -> c.equals(category1.id)));
+        assertFalse(ids.stream().anyMatch(c -> c.equals(category2.id)));
     }
 
     @Test
     public void testGetSubSubCategoriesWithQuizzes(){
-        CategoryDto category1 = new CategoryDto(null, "cat1");
+        CategoryDto category1 = new CategoryDto(null, "cat1", null);
         category1.id = createCategory(category1);
-        CategoryDto category2 = new CategoryDto(null, "cat2");
+        CategoryDto category2 = new CategoryDto(null, "cat2", null);
         category2.id = createCategory(category2);
-        CategoryDto category3 = new CategoryDto(null, "cat3");
+        CategoryDto category3 = new CategoryDto(null, "cat3", null);
         category3.id = createCategory(category3);
 
-        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1);
+        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1, null);
         subCategory1.id = createSubCategory(subCategory1);
-        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2);
+        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2, null);
         subCategory2.id = createSubCategory(subCategory2);
-        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3);
+        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3, null);
         subCategory3.id = createSubCategory(subCategory3);
 
         SubSubCategoryDto subSubCategory1 = new SubSubCategoryDto(null, "subsub1", subCategory1);
@@ -217,18 +224,18 @@ public class CategoryRestIT extends TestBase {
 
     @Test
     public void testGetAllSubCategoriesOfACategory(){
-        CategoryDto category1 = new CategoryDto(null, "cat1");
+        CategoryDto category1 = new CategoryDto(null, "cat1", null);
         category1.id = createCategory(category1);
-        CategoryDto category2 = new CategoryDto(null, "cat2");
+        CategoryDto category2 = new CategoryDto(null, "cat2", null);
         category2.id = createCategory(category2);
-        CategoryDto category3 = new CategoryDto(null, "cat3");
+        CategoryDto category3 = new CategoryDto(null, "cat3",null);
         category3.id = createCategory(category3);
 
-        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1);
+        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1, null);
         subCategory1.id = createSubCategory(subCategory1);
-        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category1);
+        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category1, null);
         subCategory2.id = createSubCategory(subCategory2);
-        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3);
+        SubCategoryDto subCategory3 = new SubCategoryDto(null, "sub3", category3, null);
         subCategory3.id = createSubCategory(subCategory3);
 
         //Sub categories counted
@@ -252,7 +259,7 @@ public class CategoryRestIT extends TestBase {
     @Test
     public void testCreateWithSpecifiedId(){
         given().contentType(ContentType.JSON)
-                .body(new CategoryDto("1", "name"))
+                .body(new CategoryDto("1", "name", null))
                 .post()
                 .then()
                 .statusCode(400);
@@ -261,7 +268,7 @@ public class CategoryRestIT extends TestBase {
     @Test
     public void testCreateWithoutName(){
         given().contentType(ContentType.JSON)
-                .body(new CategoryDto(null, null))
+                .body(new CategoryDto(null, null, null))
                 .post()
                 .then()
                 .statusCode(400);

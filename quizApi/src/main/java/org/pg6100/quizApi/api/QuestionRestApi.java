@@ -15,7 +15,7 @@ import java.util.List;
 @Api(value = "/quizzes" , description = "Handling of creating and retrieving quiz data")
 @Path("/quizzes")
 @Produces({
-        Formats.V2_JSON,
+        Formats.V1_JSON,
         Formats.BASE_JSON
 })
 
@@ -29,7 +29,7 @@ public interface QuestionRestApi {
     //POST
     @ApiOperation("Create a new question")
     @POST
-    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Consumes({Formats.V1_JSON, Formats.BASE_JSON})
     @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Id of the newly created question")
     Long createQuestion(

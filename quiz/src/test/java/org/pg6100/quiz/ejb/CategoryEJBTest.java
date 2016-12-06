@@ -106,7 +106,7 @@ public class CategoryEJBTest extends EJBTestBase {
 
     @Test
     public void testGetCategoriesWithQuestions(){
-        assertEquals(0, categoryEJB.getCategoriesWithQuestions().size());
+        assertEquals(0, categoryEJB.getCategories(true, false, 50).size());
 
         Long category1 = categoryEJB.createNewCategory("c1");
         Long category2 = categoryEJB.createNewCategory("c2");
@@ -120,13 +120,13 @@ public class CategoryEJBTest extends EJBTestBase {
         Long subSubCategory2 = categoryEJB.createNewSubSubCategory("ss2", subCategory2);
         Long subSubCategory3 = categoryEJB.createNewSubSubCategory("ss3", subCategory3);
 
-        assertEquals(0, categoryEJB.getCategoriesWithQuestions().size());
+        assertEquals(0, categoryEJB.getCategories(true, false, 50).size());
 
         questionEJB.createQuestion(subSubCategory1, "Question", answers, 3);
         questionEJB.createQuestion(subSubCategory2, "Question", answers, 3);
         questionEJB.createQuestion(subSubCategory3, "Question", answers, 3);
 
-        List<Category> categories = categoryEJB.getCategoriesWithQuestions();
+        List<Category> categories = categoryEJB.getCategories(true, false, 50);
         assertEquals(2, categories.size());
         assertTrue(categories.stream().anyMatch(c -> c.getId().equals(category1)));
         assertFalse(categories.stream().anyMatch(c -> c.getId().equals(category2)));

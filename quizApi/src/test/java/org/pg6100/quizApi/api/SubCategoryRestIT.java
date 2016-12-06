@@ -24,11 +24,11 @@ public class SubCategoryRestIT extends TestBase {
     public void testCreateAndGetSubCategory() {
         get().then().statusCode(200).body("size()", is(0));
 
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
         given().contentType(ContentType.JSON)
-                .body(new SubCategoryDto(null, "sub", categoryDto))
+                .body(new SubCategoryDto(null, "sub", categoryDto, null))
                 .post()
                 .then()
                 .statusCode(200)
@@ -39,11 +39,11 @@ public class SubCategoryRestIT extends TestBase {
 
     @Test
     public void testUpdateSubCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
         String name = "sub";
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto, null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         get("/id/" + subCategoryDto.id)
@@ -69,11 +69,11 @@ public class SubCategoryRestIT extends TestBase {
 
     @Test
     public void testPatchSubCategoryName() {
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
         String name = "sub";
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, name, categoryDto,null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         get("/id/" + subCategoryDto.id)
@@ -99,14 +99,14 @@ public class SubCategoryRestIT extends TestBase {
     //@Path("/parent/{id}")
     @Test
     public void testGetSubCategoriesOfParentCategory(){
-        CategoryDto categoryDto1 = new CategoryDto(null, "cat");
+        CategoryDto categoryDto1 = new CategoryDto(null, "cat", null);
         categoryDto1.id = createCategory(categoryDto1);
-        CategoryDto categoryDto2 = new CategoryDto(null, "cat");
+        CategoryDto categoryDto2 = new CategoryDto(null, "cat", null);
         categoryDto2.id = createCategory(categoryDto2);
 
-        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2));
-        createSubCategory(new SubCategoryDto(null, "sub", categoryDto1));
-        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2));
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2, null));
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto1, null));
+        createSubCategory(new SubCategoryDto(null, "sub", categoryDto2, null));
 
         get("/parent/" + categoryDto1.id)
                 .then()
@@ -120,14 +120,14 @@ public class SubCategoryRestIT extends TestBase {
     //@Path("/id/{id}/subsubcategories")
     @Test
     public void testGetSubSubCategoriesOfSubCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto1.id = createSubCategory(subCategoryDto1);
-        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto2.id = createSubCategory(subCategoryDto2);
-        SubCategoryDto subCategoryDto3 = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto3 = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto3.id = createSubCategory(subCategoryDto3);
 
         createSubSubCategory(new SubSubCategoryDto(null, "subsub", subCategoryDto3));
@@ -153,15 +153,15 @@ public class SubCategoryRestIT extends TestBase {
     //Now deprecated 3**
     @Test
     public void testUpdateWithIdNotLong(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto1.id = createSubCategory(subCategoryDto1);
 
         given().contentType(ContentType.JSON)
                 .pathParam("id", subCategoryDto1.id)
-                .body(new SubCategoryDto("hiNotANumber", "hei", new CategoryDto()))
+                .body(new SubCategoryDto("hiNotANumber", "hei", new CategoryDto(), null))
                 .put("/id/{id}")
                 .then()
                 .statusCode(301);
@@ -169,15 +169,15 @@ public class SubCategoryRestIT extends TestBase {
 
     @Test
     public void testUpdateId(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub", categoryDto,null);
         subCategoryDto1.id = createSubCategory(subCategoryDto1);
 
         given().contentType(ContentType.JSON)
                 .pathParam("id", subCategoryDto1.id)
-                .body(new SubCategoryDto(subCategoryDto1.id + "2", "hei", new CategoryDto()))
+                .body(new SubCategoryDto(subCategoryDto1.id + "2", "hei", new CategoryDto(),null))
                 .put("/id/{id}")
                 .then()
                 .statusCode(301);

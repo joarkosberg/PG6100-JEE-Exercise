@@ -3,7 +3,6 @@ package org.pg6100.quizApi.api;
 import io.swagger.annotations.*;
 import io.swagger.jaxrs.PATCH;
 import org.pg6100.quizApi.dto.SubSubCategoryDto;
-import org.pg6100.quizApi.dto.SubSubCategoryDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,7 +12,7 @@ import java.util.List;
 @Api(value = "/subsubcategories" , description = "Handling of creating and retrieving quiz data")
 @Path("/subsubcategories")
 @Produces({
-        Formats.V2_JSON,
+        Formats.V1_JSON,
         Formats.BASE_JSON
 })
 
@@ -35,7 +34,7 @@ public interface SubSubCategoryRestApi {
 
     @ApiOperation("Create a new sub sub category")
     @POST
-    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Consumes({Formats.V1_JSON, Formats.BASE_JSON})
     @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Id of the newly create sub sub category")
     Long createSubSubCategory(

@@ -1,48 +1,40 @@
 package org.pg6100.quiz.entity;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = Category.GET_ALL_CATEGORIES, query =
                 "select c " +
-                        "from Category c " +
-                        "where TYPE(c) = Category"),
+                        "from Category c"),
         @NamedQuery(name = Category.GET_CATEGORY, query =
                 "select c " +
                         "from Category c " +
-                        "where TYPE(c) = Category and c.id = :id")
+                        "where c.id = :id")
 })
 
 @Entity
-public class Category {
+public class Category extends BaseCategory{
     public static final String GET_ALL_CATEGORIES= "GET_ALL_CATEGORIES";
     public static final String GET_CATEGORY= "GET_CATEGORY";
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @NotBlank
-    private String name;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "category",
+            cascade = CascadeType.ALL
+    )
+    private List<SubCategory> subCategories;
 
     public Category(){
+        subCategories = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    public List<SubCategory> getSubCategories() {
+        return subCategories;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setSubCategories(List<SubCategory> subCategories) {
+        this.subCategories = subCategories;
     }
 }

@@ -97,7 +97,7 @@ public class SubSubCategoryRestImpl implements SubSubCategoryRestApi {
         if (!categoryEJB.isSubSubCategoryPresent(id)) {
             throw new WebApplicationException("Cannot find sub sub category with id: " + id, 404);
         }
-        categoryEJB.delete(id);
+        categoryEJB.deleteSubSubCategory(id);
     }
 
     /*

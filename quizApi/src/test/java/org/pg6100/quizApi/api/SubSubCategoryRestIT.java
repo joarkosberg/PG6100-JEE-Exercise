@@ -28,10 +28,10 @@ public class SubSubCategoryRestIT extends TestBase {
     public void testCreateAndGetSubSubCategory() {
         get().then().statusCode(200).body("size()", is(0));
 
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         given().contentType(ContentType.JSON)
@@ -46,10 +46,10 @@ public class SubSubCategoryRestIT extends TestBase {
 
     @Test
     public void testUpdateSubSubCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         String name = "subsub";
@@ -81,12 +81,12 @@ public class SubSubCategoryRestIT extends TestBase {
 
     @Test
     public void testPatchSubSubCategoryParent(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub1", categoryDto);
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub1", categoryDto, null);
         subCategoryDto1.id = createSubCategory(subCategoryDto1);
-        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub2", categoryDto);
+        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub2", categoryDto, null);
         subCategoryDto2.id = createSubCategory(subCategoryDto2);
 
         SubSubCategoryDto subSubCategoryDto = new SubSubCategoryDto(null, "subsub", subCategoryDto1);
@@ -117,14 +117,14 @@ public class SubSubCategoryRestIT extends TestBase {
     //@Path("/parent/{id}")
     @Test
     public void testGetSubCategoriesOfParentCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub1", categoryDto);
+        SubCategoryDto subCategoryDto1 = new SubCategoryDto(null, "sub1", categoryDto, null);
         subCategoryDto1.id = createSubCategory(subCategoryDto1);
-        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub2", categoryDto);
+        SubCategoryDto subCategoryDto2 = new SubCategoryDto(null, "sub2", categoryDto, null);
         subCategoryDto2.id = createSubCategory(subCategoryDto2);
-        SubCategoryDto subCategoryDto3 = new SubCategoryDto(null, "sub3", categoryDto);
+        SubCategoryDto subCategoryDto3 = new SubCategoryDto(null, "sub3", categoryDto, null);
         subCategoryDto3.id = createSubCategory(subCategoryDto3);
 
         String subName = "thatSubSub";
@@ -155,10 +155,10 @@ public class SubSubCategoryRestIT extends TestBase {
     //Now permanently redirects 3**
     @Test
     public void testPatchWithNonExistingSubSubCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         SubSubCategoryDto subSubCategoryDto = new SubSubCategoryDto(null, "subsub", subCategoryDto);
@@ -174,10 +174,10 @@ public class SubSubCategoryRestIT extends TestBase {
 
     @Test
     public void testPatchWithNonExistingParent(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
-        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto);
+        SubCategoryDto subCategoryDto = new SubCategoryDto(null, "sub", categoryDto, null);
         subCategoryDto.id = createSubCategory(subCategoryDto);
 
         SubSubCategoryDto subSubCategoryDto = new SubSubCategoryDto(null, "subsub", subCategoryDto);
@@ -193,7 +193,7 @@ public class SubSubCategoryRestIT extends TestBase {
 
     @Test
     public void testDeleteNotSubSubCategory(){
-        CategoryDto categoryDto = new CategoryDto(null, "cat");
+        CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
 
         given().pathParam("id", categoryDto.id)

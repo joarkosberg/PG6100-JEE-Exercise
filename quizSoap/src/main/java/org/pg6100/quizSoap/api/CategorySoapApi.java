@@ -8,7 +8,7 @@ import java.util.List;
 @WebService(name = "CategorySoap")
 public interface CategorySoapApi {
 
-    List<CategoryDto> getCategories(Boolean withQuizzes);
+    List<CategoryDto> getCategories(boolean withQuizzes);
 
     Long createCategory(CategoryDto dto);
 

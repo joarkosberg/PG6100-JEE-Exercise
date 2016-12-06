@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -41,21 +42,34 @@ public class CategoryEJB {
         return query.getResultList();
     }
 
-    public List<Category> getCategoriesWithQuestions(){
-        List<Question> questions = questionEJB.getAllQuestions();
-        if(questions.size() == 0){
-            return new ArrayList<>();
+    public List<Category> getCategories(boolean withQuestions, boolean expand, int maxResults){
+        Predicate<Category> predicate = c -> 1 == 1;
+        Set<Long> categories;
+        if(withQuestions) {
+            List<Question> questions = questionEJB.getAllQuestions();
+            if (questions.size() == 0)
+                return new ArrayList<>();
+
+            categories = questions
+                    .stream()
+                    .map(q -> q.getSubSubCategory().getSubCategory().getCategory().getId())
+                    .collect(toSet());
+
+            predicate = c -> categories.contains(c.getId());
         }
 
-        Set<Long> categories = questions
+        List<Category> result = getAllCategories()
                 .stream()
-                .map(q -> q.getSubSubCategory().getSubCategory().getCategory().getId())
-                .collect(toSet());
-
-        return getAllCategories()
-                .stream()
-                .filter(c -> categories.contains(c.getId()))
+                .filter(predicate)
+                .limit(maxResults)
                 .collect(Collectors.toList());
+
+        if(expand){
+            result.forEach(c -> c.getSubCategories().size());
+            result.forEach(c -> c.getSubCategories().forEach(sc -> sc.getSubSubCategories().size()));
+        }
+
+        return result;
     }
 
     public Category getCategory(Long id){
@@ -93,6 +107,9 @@ public class CategoryEJB {
         subCategory.setCategory(category);
 
         em.persist(subCategory);
+
+        category.getSubCategories().add(subCategory);
+
         return subCategory.getId();
     }
 
@@ -145,6 +162,8 @@ public class CategoryEJB {
         subSubCategory.setName(name);
         subSubCategory.setSubCategory(subCategory);
         em.persist(subSubCategory);
+
+        subCategory.getSubSubCategories().add(subSubCategory);
 
         return subSubCategory.getId();
     }
@@ -206,9 +225,26 @@ public class CategoryEJB {
         return true;
     }
 
-    //Universal
-    public boolean delete(@NotNull Long id){
+    public boolean deleteCategory(@NotNull Long id){
         Category c = em.find(Category.class, id);
+        if (c != null) {
+            em.remove(c);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteSubCategory(@NotNull Long id){
+        SubCategory c = em.find(SubCategory.class, id);
+        if (c != null) {
+            em.remove(c);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteSubSubCategory(@NotNull Long id){
+        SubSubCategory c = em.find(SubSubCategory.class, id);
         if (c != null) {
             em.remove(c);
             return true;

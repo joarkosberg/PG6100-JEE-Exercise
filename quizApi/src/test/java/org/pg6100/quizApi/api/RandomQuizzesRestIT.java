@@ -26,14 +26,14 @@ public class RandomQuizzesRestIT extends TestBase {
 
     @Test
     public void testRandomQuizzesWithValidCategories(){
-        CategoryDto category1 = new CategoryDto(null, "cat1");
+        CategoryDto category1 = new CategoryDto(null, "cat1", null);
         category1.id = createCategory(category1);
-        CategoryDto category2 = new CategoryDto(null, "cat2");
+        CategoryDto category2 = new CategoryDto(null, "cat2", null);
         category2.id = createCategory(category2);
 
-        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1);
+        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1, null);
         subCategory1.id = createSubCategory(subCategory1);
-        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2);
+        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2, null);
         subCategory2.id = createSubCategory(subCategory2);
 
         SubSubCategoryDto subSubCategory1 = new SubSubCategoryDto(null, "subsub1", subCategory1);
@@ -131,14 +131,14 @@ public class RandomQuizzesRestIT extends TestBase {
     }
 
     public List<Long> createTestData(){
-        CategoryDto category1 = new CategoryDto(null, "cat1");
+        CategoryDto category1 = new CategoryDto(null, "cat1", null);
         category1.id = createCategory(category1);
-        CategoryDto category2 = new CategoryDto(null, "cat2");
+        CategoryDto category2 = new CategoryDto(null, "cat2", null);
         category2.id = createCategory(category2);
 
-        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1);
+        SubCategoryDto subCategory1 = new SubCategoryDto(null, "sub1", category1, null);
         subCategory1.id = createSubCategory(subCategory1);
-        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2);
+        SubCategoryDto subCategory2 = new SubCategoryDto(null, "sub2", category2, null);
         subCategory2.id = createSubCategory(subCategory2);
 
         SubSubCategoryDto subSubCategory1 = new SubSubCategoryDto(null, "subsub1", subCategory1);

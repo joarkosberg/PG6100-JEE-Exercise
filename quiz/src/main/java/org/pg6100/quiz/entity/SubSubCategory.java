@@ -13,7 +13,7 @@ import javax.persistence.*;
 })
 
 @Entity
-public class SubSubCategory extends Category {
+public class SubSubCategory extends BaseCategory {
     public static final String GET_ALL_SUB_SUB_CATEGORIES = "GET_ALL_SUB_SUB_CATEGORIES";
     public static final String GET_SUB_SUB_CATEGORIES = "GET_SUB_SUB_CATEGORIES";
 

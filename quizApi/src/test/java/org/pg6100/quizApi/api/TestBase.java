@@ -6,13 +6,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.pg6100.quizApi.api.util.JBossUtil;
-import org.pg6100.quizApi.dto.CategoryDto;
-import org.pg6100.quizApi.dto.QuestionDto;
-import org.pg6100.quizApi.dto.SubCategoryDto;
-import org.pg6100.quizApi.dto.SubSubCategoryDto;
+import org.pg6100.quizApi.dto.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -84,16 +82,19 @@ public class TestBase {
 
         //Category
         RestAssured.basePath = categoryRest;
-        List<CategoryDto> categories = Arrays.asList(given().accept(ContentType.JSON)
+        ListDto<?> categories = given()
+                .accept(ContentType.JSON)
                 .get()
                 .then()
                 .statusCode(200)
-                .extract().as(CategoryDto[].class));
-        categories.stream().forEach(dto ->
-                given().pathParam("id", dto.id)
+                .extract()
+                .as(ListDto.class);
+        categories.list.stream().map(c -> ((Map) c).get("id"))
+                .forEach(id ->
+                given().pathParam("id", id)
                         .delete("/{id}")
                         .then().statusCode(204));
-        get().then().statusCode(200).body("size()", is(0));
+        get().then().statusCode(200).body("list.size()", is(0));
 
         RestAssured.basePath = activeRest;
     }

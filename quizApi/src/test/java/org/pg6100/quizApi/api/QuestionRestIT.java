@@ -118,10 +118,10 @@ public class QuestionRestIT extends TestBase {
     }
 
     public SubSubCategoryDto createAndGetSubSubCategory(){
-        CategoryDto category = new CategoryDto(null, "cat");
+        CategoryDto category = new CategoryDto(null, "cat", null);
         category.id = createCategory(category);
 
-        SubCategoryDto subCategory = new SubCategoryDto(null, "sub", category);
+        SubCategoryDto subCategory = new SubCategoryDto(null, "sub", category, null);
         subCategory.id = createSubCategory(subCategory);
 
         SubSubCategoryDto subSubCategory = new SubSubCategoryDto(null, "subsub", subCategory);

@@ -22,12 +22,8 @@ public class CategorySoapImpl implements CategorySoapApi{
     private CategoryEJB categoryEJB;
 
     @Override
-    public List<CategoryDto> getCategories(Boolean withQuizzes) {
-        if(withQuizzes != null)
-            if (withQuizzes)
-                return CategoryConverter.transform(categoryEJB.getCategoriesWithQuestions());
-
-        return CategoryConverter.transform(categoryEJB.getAllCategories());
+    public List<CategoryDto> getCategories(boolean withQuizzes) {
+        return CategoryConverter.transform(categoryEJB.getCategories(withQuizzes, false, 1000));
     }
 
     @Override
@@ -62,6 +58,6 @@ public class CategorySoapImpl implements CategorySoapApi{
         if (!categoryEJB.isCategoryPresent(id)) {
             return false;
         }
-        return categoryEJB.delete(id);
+        return categoryEJB.deleteCategory(id);
     }
 }

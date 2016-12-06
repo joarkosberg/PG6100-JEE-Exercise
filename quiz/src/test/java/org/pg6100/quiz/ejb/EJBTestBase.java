@@ -33,11 +33,11 @@ public abstract class EJBTestBase {
     public void cleanDatabase() {
         questionEJB.getAllQuestions().stream().forEach(n -> questionEJB.deleteQuestion(n.getId()));
         assertEquals(0, questionEJB.getAllQuestions().size());
-        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        categoryEJB.getAllSubSubCategories().stream().forEach(n -> categoryEJB.deleteSubSubCategory(n.getId()));
         assertEquals(0, categoryEJB.getAllSubSubCategories().size());
-        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        categoryEJB.getAllSubCategories().stream().forEach(n -> categoryEJB.deleteSubCategory(n.getId()));
         assertEquals(0, categoryEJB.getAllSubCategories().size());
-        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.delete(n.getId()));
+        categoryEJB.getAllCategories().stream().forEach(n -> categoryEJB.deleteCategory(n.getId()));
         assertEquals(0, categoryEJB.getAllCategories().size());
     }
 }

@@ -2,6 +2,7 @@ package org.pg6100.quizApi.api;
 
 import io.swagger.annotations.*;
 import io.swagger.jaxrs.PATCH;
+import org.pg6100.quizApi.dto.ListDto;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.CategoryDto;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Api(value = "/categories" , description = "Handling of creating and retrieving category data")
 @Path("/categories")
 @Produces({
-        Formats.V2_JSON,
+        Formats.V1_JSON,
         Formats.BASE_JSON
 })
 
@@ -25,10 +26,23 @@ public interface CategoryRestApi {
     //GET
     @ApiOperation("Retrieve a list of all the categories")
     @GET
-    List<CategoryDto> getCategories(
+    ListDto<CategoryDto> getCategories(
             @ApiParam("True if only want categories with quizzes")
             @QueryParam("withQuizzes")
-                    Boolean withQuizzes
+                    @DefaultValue("false")
+                    boolean withQuizzes,
+            @ApiParam("Offset in the list of news")
+            @QueryParam("offset")
+            @DefaultValue("0")
+                    Integer offset,
+            @ApiParam("Limit of news in a single retrieved page")
+            @QueryParam("limit")
+            @DefaultValue("20")
+                    Integer limit,
+            @ApiParam("Whether to retrieve with sub- and subsub-categories")
+            @QueryParam("expand")
+            @DefaultValue("false")
+                    boolean expand
     );
 
 
@@ -36,7 +50,7 @@ public interface CategoryRestApi {
     //POST
     @ApiOperation("Create a new category")
     @POST
-    @Consumes({Formats.V2_JSON, Formats.BASE_JSON})
+    @Consumes({Formats.V1_JSON, Formats.BASE_JSON})
     @Produces(Formats.BASE_JSON)
     @ApiResponse(code = 200, message = "Name of the newly created category")
     Long createCategory(

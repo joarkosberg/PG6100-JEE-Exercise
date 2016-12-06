@@ -2,22 +2,29 @@ package org.pg6100.quizApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.quiz.entity.Category;
+import org.pg6100.quizApi.dto.ListDto;
 import org.pg6100.quizApi.dto.converter.SubCategoryConverter;
 import org.pg6100.quizApi.api.CategoryRestApi;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.converter.CategoryConverter;
 import org.pg6100.quizApi.dto.CategoryDto;
 import org.pg6100.quizApi.dto.converter.SubCategoryConverter;
+import org.pg6100.quizApi.dto.hal.HalLink;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 @Stateless
@@ -27,13 +34,51 @@ public class CategoryRestImpl implements CategoryRestApi {
     @EJB
     private CategoryEJB categoryEJB;
 
-    @Override
-    public List<CategoryDto> getCategories(Boolean withQuizzes) {
-        if(withQuizzes != null)
-            if (withQuizzes)
-                return CategoryConverter.transform(categoryEJB.getCategoriesWithQuestions());
+    @Context
+    UriInfo uriInfo;
 
-        return CategoryConverter.transform(categoryEJB.getAllCategories());
+    @Override
+    public ListDto<CategoryDto> getCategories(boolean withQuizzes, Integer offset, Integer limit, boolean expand) {
+        if(offset < 0)
+            throw new WebApplicationException("Negative offset: "+offset, 400);
+        if(limit < 1)
+            throw new WebApplicationException("Limit should be at least 1: "+limit, 400);
+
+        int maxFromDb = 50;
+
+        List<Category> categories = categoryEJB.getCategories(withQuizzes, expand, maxFromDb);
+        if(offset != 0 && offset >=  categories.size()){
+            throw new WebApplicationException("Offset "+ offset + " out of bound " + categories.size(), 400);
+        }
+
+        ListDto<CategoryDto> dto = CategoryConverter.transform(
+                categories, offset, limit, expand);
+
+        UriBuilder builder = uriInfo.getBaseUriBuilder()
+                .path("/categories")
+                .queryParam("withQuizzes", withQuizzes)
+                .queryParam("expand", expand)
+                .queryParam("limit", limit);
+
+        dto._links.self = new HalLink(builder.clone()
+                .queryParam("offset", offset)
+                .build().toString()
+        );
+
+        if (!categories.isEmpty() && offset > 0) {
+            dto._links.previous = new HalLink(builder.clone()
+                    .queryParam("offset", Math.max(offset - limit, 0))
+                    .build().toString()
+            );
+        }
+        if (offset + limit < categories.size()) {
+            dto._links.next = new HalLink(builder.clone()
+                    .queryParam("offset", offset + limit)
+                    .build().toString()
+            );
+        }
+
+        return dto;
     }
 
     @Override
@@ -98,7 +143,7 @@ public class CategoryRestImpl implements CategoryRestApi {
         if (!categoryEJB.isCategoryPresent(id)) {
             throw new WebApplicationException("Cannot find category with id: " + id, 404);
         }
-        categoryEJB.delete(id);
+        categoryEJB.deleteCategory(id);
     }
 
     @Override

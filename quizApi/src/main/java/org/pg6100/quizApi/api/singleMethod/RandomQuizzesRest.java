@@ -6,7 +6,6 @@ import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.ejb.QuestionEJB;
 import org.pg6100.quizApi.dto.QuestionDto;
 import org.pg6100.quizApi.api.Formats;
-import org.pg6100.quizApi.dto.QuestionDto;
 import org.pg6100.quizApi.dto.converter.QuestionConverter;
 
 import javax.ejb.EJB;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @Api(value = "/randomquizzes" , description = "Gets random quizzes")
 @Path("/randomquizzes")
 @Produces({
-        Formats.V2_JSON,
+        Formats.V1_JSON,
         Formats.BASE_JSON
 })
 

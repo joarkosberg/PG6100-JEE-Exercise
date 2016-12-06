@@ -28,20 +28,20 @@ public class CategorySoapApiIT {
     @Before
     @After
     public void cleanData(){
-        List<CategoryDto> list = ws.getCategories(null);
+        List<CategoryDto> list = ws.getCategories(false);
         list.forEach(dto -> ws.deleteCategory(dto.getId()));
     }
 
     @Test
     public void testCreateAndGet() {
-        assertEquals(0, ws.getCategories(null).size());
+        assertEquals(0, ws.getCategories(false).size());
 
         String name = "MittNavn";
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(name);
 
         Long id = ws.createCategory(categoryDto);
-        assertEquals(1, ws.getCategories(null).size());
+        assertEquals(1, ws.getCategories(false).size());
 
         CategoryDto createdCategory = ws.getCategory(id);
 
@@ -56,7 +56,7 @@ public class CategorySoapApiIT {
         categoryDto.setId(Long.valueOf(1234)); //Is generated, should not make own.
 
         ws.createCategory(categoryDto);
-        assertEquals(0, ws.getCategories(null).size());
+        assertEquals(0, ws.getCategories(false).size());
     }
 
     @Test
