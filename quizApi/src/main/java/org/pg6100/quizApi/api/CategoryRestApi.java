@@ -23,7 +23,6 @@ public interface CategoryRestApi {
 
 
 
-    //GET
     @ApiOperation("Retrieve a list of all the categories")
     @GET
     ListDto<CategoryDto> getCategories(
@@ -42,12 +41,10 @@ public interface CategoryRestApi {
             @ApiParam("Whether to retrieve with sub- and subsub-categories")
             @QueryParam("expand")
             @DefaultValue("false")
-                    boolean expand
-    );
+                    boolean expand);
 
 
 
-    //POST
     @ApiOperation("Create a new category")
     @POST
     @Consumes({Formats.V1_JSON, Formats.BASE_JSON})

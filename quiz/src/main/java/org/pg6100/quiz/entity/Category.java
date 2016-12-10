@@ -16,8 +16,8 @@ import java.util.List;
 
 @Entity
 public class Category extends BaseCategory{
-    public static final String GET_ALL_CATEGORIES= "GET_ALL_CATEGORIES";
-    public static final String GET_CATEGORY= "GET_CATEGORY";
+    public static final String GET_ALL_CATEGORIES = "GET_ALL_CATEGORIES";
+    public static final String GET_CATEGORY = "GET_CATEGORY";
 
     @OneToMany(
             fetch = FetchType.LAZY,

@@ -3,6 +3,7 @@ package org.pg6100.quiz.entity;
 import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @NamedQueries({
@@ -25,6 +26,7 @@ public class Question {
     private Long id;
 
     @NotBlank
+    @Size(max = 512)
     private String question;
 
     @ElementCollection(fetch = FetchType.EAGER)

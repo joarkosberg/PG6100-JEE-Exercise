@@ -18,6 +18,8 @@ import java.util.List;
 
 public interface SubSubCategoryRestApi {
 
+
+
     @ApiOperation("Retrieve a list of all sub sub categories")
     @GET
     List<SubSubCategoryDto> getAllSubSubCategories(

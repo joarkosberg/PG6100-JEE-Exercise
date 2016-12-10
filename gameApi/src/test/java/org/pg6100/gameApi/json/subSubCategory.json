@@ -1,0 +1,14 @@
+[
+  {
+    "id": "5",
+    "name": "Animals",
+    "subCategory": {
+      "id": "4",
+      "name": "Living beings",
+      "category": {
+        "id": "Everything",
+        "name": "3"
+      }
+    }
+  }
+]

@@ -10,7 +10,6 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {
-//Class needed for date
 
     private final ObjectMapper mapper;
 

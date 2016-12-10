@@ -101,18 +101,23 @@ public class CategoryRestIT extends TestBase {
 
         //Patch
         String newName = "newCat";
-        given().contentType(ContentType.TEXT)
+        String newLocation = given().contentType(ContentType.TEXT)
                 .pathParam("id", categoryDto.id)
                 .body(newName)
                 .patch("/id/{id}")
                 .then()
-                .statusCode(301);
+                .statusCode(301)
+                .extract().header("location");
 
-        /*
+        given().contentType(ContentType.TEXT)
+                .body(newName)
+                .patch(newLocation)
+                .then()
+                .statusCode(204);
+
         get("/id/" + categoryDto.id)
                 .then()
                 .body("name", is(newName));
-                */
     }
 
     @Test //TODO WAY TOO LONG TEST/METHOD (All tests under this one)

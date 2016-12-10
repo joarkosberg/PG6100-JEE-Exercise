@@ -1,0 +1,94 @@
+[
+  {
+    "id": 1,
+    "question": "What does the cat say?",
+    "answers": [
+      "Mioaw",
+      "Moo",
+      "Baa",
+      "sssssssss"
+    ],
+    "correctAnswer": 0,
+    "subSubCategory": {
+      "id": "5",
+      "name": "string",
+      "subCategory": {
+        "id": "string",
+        "name": "string",
+        "category": {
+          "id": "string",
+          "name": "string"
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "question": "What does the sheep say?",
+    "answers": [
+      "Mioaw",
+      "Moo",
+      "Baa",
+      "sssssssss"
+    ],
+    "correctAnswer": 2,
+    "subSubCategory": {
+      "id": "5",
+      "name": "string",
+      "subCategory": {
+        "id": "string",
+        "name": "string",
+        "category": {
+          "id": "string",
+          "name": "string"
+        }
+      }
+    }
+  },
+  {
+    "id": 3,
+    "question": "What does the cow say?",
+    "answers": [
+      "Mioaw",
+      "Moo",
+      "Baa",
+      "sssssssss"
+    ],
+    "correctAnswer": 1,
+    "subSubCategory": {
+      "id": "5",
+      "name": "string",
+      "subCategory": {
+        "id": "string",
+        "name": "string",
+        "category": {
+          "id": "string",
+          "name": "string"
+        }
+      }
+    }
+  },
+  {
+    "id": 4,
+    "question": "What does the snake say?",
+    "answers": [
+      "Mioaw",
+      "Moo",
+      "Baa",
+      "sssssssss"
+    ],
+    "correctAnswer": 3,
+    "subSubCategory": {
+      "id": "5",
+      "name": "string",
+      "subCategory": {
+        "id": "string",
+        "name": "string",
+        "category": {
+          "id": "string",
+          "name": "string"
+        }
+      }
+    }
+  }
+]
