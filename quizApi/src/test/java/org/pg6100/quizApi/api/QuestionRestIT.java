@@ -32,8 +32,7 @@ public class QuestionRestIT extends TestBase {
                 .body(new QuestionDto(null, "question", answers, 3, subSubCategoryDto))
                 .post()
                 .then()
-                .statusCode(200)
-                .extract();
+                .statusCode(200);
         get().then().statusCode(200).body("size()", is(1));
     }
 

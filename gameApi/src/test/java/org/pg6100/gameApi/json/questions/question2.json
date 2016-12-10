@@ -1,0 +1,23 @@
+{
+  "id": "2",
+  "question": "What does the sheep say?",
+  "answers": [
+    "Mioaw",
+    "Moo",
+    "Baa",
+    "sssssssss"
+  ],
+  "correctAnswer": 2,
+  "subSubCategory": {
+    "id": "5",
+    "name": "string",
+    "subCategory": {
+      "id": "string",
+      "name": "string",
+      "category": {
+        "id": "string",
+        "name": "string"
+      }
+    }
+  }
+}

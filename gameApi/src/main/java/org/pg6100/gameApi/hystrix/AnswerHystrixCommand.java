@@ -31,13 +31,8 @@ public class AnswerHystrixCommand extends HystrixCommand<Integer> {
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-
-        System.out.println("\n\n RESPONSE - " + response.toString());
-
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(response.readEntity(String.class));
-
-        System.out.println("\n\nJSON - " + json.toString());
 
         Integer answer = json.get("correctAnswer").getAsInt();
         return answer;

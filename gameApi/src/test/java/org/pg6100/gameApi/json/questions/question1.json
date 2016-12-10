@@ -1,0 +1,23 @@
+{
+  "id": "1",
+  "question": "What does the cat say?",
+  "answers": [
+    "Mioaw",
+    "Moo",
+    "Baa",
+    "sssssssss"
+  ],
+  "correctAnswer": 0,
+  "subSubCategory": {
+    "id": "5",
+    "name": "string",
+    "subCategory": {
+      "id": "string",
+      "name": "string",
+      "category": {
+        "id": "string",
+        "name": "string"
+      }
+    }
+  }
+}

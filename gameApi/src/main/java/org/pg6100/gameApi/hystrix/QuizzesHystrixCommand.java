@@ -43,6 +43,8 @@ public class QuizzesHystrixCommand extends HystrixCommand<Long []>{
         }
 
         Long []quizList = response.readEntity(Long[].class);
+        System.out.println("\n\n\nRESPONSE IN HYSTRIX******************* \n" + Arrays.toString(quizList) + "\nRESPONSE END\n\n\n\n");
+
         return quizList;
     }
 
@@ -54,7 +56,6 @@ public class QuizzesHystrixCommand extends HystrixCommand<Long []>{
 
         Client client = ClientBuilder.newClient();
         Response response = client.target(uri).request(MediaType.APPLICATION_JSON_TYPE).post(null);
-
         return response;
     }
 

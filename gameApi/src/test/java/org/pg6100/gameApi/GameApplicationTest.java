@@ -29,7 +29,7 @@ public class GameApplicationTest extends GameApplicationTestBase {
     }
 
     @Test
-    public void testCreateGame() throws Exception {
+    public void testCreateGame() {
        String url = given().contentType(ContentType.JSON)
                 .queryParam("n", 4)
                 .post()
@@ -42,6 +42,41 @@ public class GameApplicationTest extends GameApplicationTestBase {
                 .then()
                 .statusCode(200)
                 .body("size()", is(4));
+    }
+
+    @Test
+    public void testFinishGame() {
+        String location = createGame();
+
+        given().contentType(ContentType.JSON)
+                .queryParam("answer", ANSWERS[0])
+                .post(location)
+                .then()
+                .statusCode(200);
+
+        given().contentType(ContentType.JSON)
+                .queryParam("answer", ANSWERS[1])
+                .post(location)
+                .then()
+                .statusCode(200);
+
+        given().contentType(ContentType.JSON)
+                .queryParam("answer", ANSWERS[2])
+                .post(location)
+                .then()
+                .statusCode(200);
+
+        given().contentType(ContentType.JSON)
+                .queryParam("answer", ANSWERS[3])
+                .post(location)
+                .then()
+                .statusCode(204);
+
+        given().contentType(ContentType.JSON)
+                .queryParam("answer", ANSWERS[0])
+                .post(location)
+                .then()
+                .statusCode(404);
     }
 
     @Test

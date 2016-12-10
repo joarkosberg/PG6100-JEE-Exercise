@@ -1,0 +1,23 @@
+{
+  "id": "4",
+  "question": "What does the snake say?",
+  "answers": [
+    "Mioaw",
+    "Moo",
+    "Baa",
+    "sssssssss"
+  ],
+  "correctAnswer": 3,
+  "subSubCategory": {
+    "id": "5",
+    "name": "string",
+    "subCategory": {
+      "id": "string",
+      "name": "string",
+      "category": {
+        "id": "string",
+        "name": "string"
+      }
+    }
+  }
+}

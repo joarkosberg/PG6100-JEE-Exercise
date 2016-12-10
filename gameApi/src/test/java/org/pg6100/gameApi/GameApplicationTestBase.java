@@ -27,6 +27,7 @@ import static org.hamcrest.core.Is.is;
 public abstract class GameApplicationTestBase {
 
     protected static WireMockServer wiremockServer;
+    protected static final Integer[] ANSWERS = new Integer []{0, 2, 1, 3};
     private static final String FILE_PATH = "src/test/java/org/pg6100/gameApi/json/";
 
     @BeforeClass
@@ -44,6 +45,7 @@ public abstract class GameApplicationTestBase {
         try {
             stubJsonRandomQuizResponse(getJsonData("randomQuestions"));
             stubJsonSubSubCategoryResponse(getJsonData("subSubCategory"));
+            stubJsonQuizzesResponse();
         } catch (FileNotFoundException e){
             System.out.println("\nFile not found: " + e.getMessage() + "\n");
         } catch (UnsupportedEncodingException e){
@@ -62,6 +64,7 @@ public abstract class GameApplicationTestBase {
                         .willReturn(WireMock.aResponse()
                                 .withHeader("Content-Type", "application/json; charset=utf-8")
                                 .withHeader("Content-Length", "" + json.getBytes("utf-8").length)
+                                .withStatus(201)
                                 .withBody(json)
                         ));
     }
@@ -72,7 +75,40 @@ public abstract class GameApplicationTestBase {
                         .willReturn(WireMock.aResponse()
                                 .withHeader("Content-Type", "application/json; charset=utf-8")
                                 .withHeader("Content-Length", "" + json.getBytes("utf-8").length)
+                                .withStatus(200)
                                 .withBody(json)));
+    }
+
+    private static void stubJsonQuizzesResponse() throws UnsupportedEncodingException, FileNotFoundException {
+        String question1 = getJsonData("questions/question1");
+        String question2 = getJsonData("questions/question2");
+        String question3 = getJsonData("questions/question3");
+        String question4 = getJsonData("questions/question4");
+
+        wiremockServer.stubFor(
+                get(urlEqualTo("/quiz/api/quizzes/1"))
+                        .willReturn(WireMock.aResponse()
+                                .withHeader("Content-Type", "application/json; charset=utf-8")
+                                .withHeader("Content-Length", "" + question1.getBytes("utf-8").length)
+                                .withBody(question1)));
+        wiremockServer.stubFor(
+                get(urlEqualTo("/quiz/api/quizzes/2"))
+                        .willReturn(WireMock.aResponse()
+                                .withHeader("Content-Type", "application/json; charset=utf-8")
+                                .withHeader("Content-Length", "" + question2.getBytes("utf-8").length)
+                                .withBody(question2)));
+        wiremockServer.stubFor(
+                get(urlEqualTo("/quiz/api/quizzes/3"))
+                        .willReturn(WireMock.aResponse()
+                                .withHeader("Content-Type", "application/json; charset=utf-8")
+                                .withHeader("Content-Length", "" + question3.getBytes("utf-8").length)
+                                .withBody(question3)));
+        wiremockServer.stubFor(
+                get(urlEqualTo("/quiz/api/quizzes/4"))
+                        .willReturn(WireMock.aResponse()
+                                .withHeader("Content-Type", "application/json; charset=utf-8")
+                                .withHeader("Content-Length", "" + question4.getBytes("utf-8").length)
+                                .withBody(question4)));
     }
 
     private static String getJsonData(String jsonFile) throws FileNotFoundException {
@@ -101,5 +137,14 @@ public abstract class GameApplicationTestBase {
                         .then().statusCode(204));
 
         io.restassured.RestAssured.get().then().statusCode(200).body("size()", is(0));
+    }
+
+    public String createGame(){
+        return given().contentType(ContentType.JSON)
+                .queryParam("n", 4)
+                .post()
+                .then()
+                .statusCode(201)
+                .extract().header("location");
     }
 }

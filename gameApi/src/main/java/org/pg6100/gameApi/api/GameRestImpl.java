@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameRestImpl implements GameRestApi{
@@ -33,6 +34,10 @@ public class GameRestImpl implements GameRestApi{
             throw new WebApplicationException("Cannot set limit lower than 1", 400);
 
         Long []quizList = new QuizzesHystrixCommand(limit).execute();
+
+
+        System.out.println("RESPONSE API******************* \n" + Arrays.toString(quizList) + "\nRESPONSE END\n\n\n\n");
+
         if (quizList == null || quizList.length < 1) {
             throw new WebApplicationException("Something went wrong when collecting quizzes for this game", 500);
         }
@@ -66,8 +71,6 @@ public class GameRestImpl implements GameRestApi{
 
         if(game == null)
             return Response.status(404).build(); // Feil id
-
-        //Integer theAnswer = QuizApiCaller.getAnswer(game.getQuestions()[game.getAnsweredQuestions()]);
 
         Integer theAnswer = new AnswerHystrixCommand(game.getQuestions()[game.getAnsweredQuestions()]).execute();
         if(theAnswer == null){
