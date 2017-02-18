@@ -69,16 +69,19 @@ public class TestBase {
 
         //Sub category
         RestAssured.basePath = subCategoryRest;
-        List<SubCategoryDto> subCategories = Arrays.asList(given().accept(ContentType.JSON)
+        ListDto<?> subCategories = given()
+                .accept(ContentType.JSON)
                 .get()
                 .then()
                 .statusCode(200)
-                .extract().as(SubCategoryDto[].class));
-        subCategories.stream().forEach(dto ->
-                given().pathParam("id", dto.id)
-                        .delete("/{id}")
-                        .then().statusCode(204));
-        get().then().statusCode(200).body("size()", is(0));
+                .extract()
+                .as(ListDto.class);
+        subCategories.list.stream().map(c -> ((Map) c).get("id"))
+                .forEach(id ->
+                        given().pathParam("id", id)
+                                .delete("/{id}")
+                                .then().statusCode(204));
+        get().then().statusCode(200).body("list.size()", is(0));
 
         //Category
         RestAssured.basePath = categoryRest;

@@ -113,8 +113,9 @@ public class CategoryEJB {
         return subCategory.getId();
     }
 
-    public List<SubCategory> getAllSubCategories(){
+    public List<SubCategory> getAllSubCategories(int max){
         Query query = em.createNamedQuery(SubCategory.GET_ALL_SUB_CATEGORIES);
+        query.setMaxResults(max);
         return query.getResultList();
     }
 

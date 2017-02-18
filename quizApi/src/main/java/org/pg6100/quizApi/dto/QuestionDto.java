@@ -10,9 +10,6 @@ import java.util.List;
 @ApiModel("A question belonging to a category")
 public class QuestionDto {
 
-    @EJB
-    private CategoryEJB categoryEJB;
-
     @ApiModelProperty("Id of the question")
     public String id;
 

@@ -43,6 +43,7 @@ public class QuizzesHystrixCommand extends HystrixCommand<Long []>{
         }
 
         Long []quizList = response.readEntity(Long[].class);
+
         System.out.println("\n\n\nRESPONSE IN HYSTRIX******************* \n" + Arrays.toString(quizList) + "\nRESPONSE END\n\n\n\n");
 
         return quizList;

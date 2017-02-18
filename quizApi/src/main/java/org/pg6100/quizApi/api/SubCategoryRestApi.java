@@ -2,6 +2,7 @@ package org.pg6100.quizApi.api;
 
 import io.swagger.annotations.*;
 import io.swagger.jaxrs.PATCH;
+import org.pg6100.quizApi.dto.ListDto;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.SubSubCategoryDto;
 
@@ -23,7 +24,16 @@ public interface SubCategoryRestApi {
 
     @ApiOperation("Retrieve a list of all sub categories")
     @GET
-    List<SubCategoryDto> getAllSubCategories();
+    ListDto<SubCategoryDto> getAllSubCategories(
+            @ApiParam("Offset in the list of news")
+            @QueryParam("offset")
+            @DefaultValue("0")
+                    Integer offset,
+            @ApiParam("Limit of news in a single retrieved page")
+            @QueryParam("limit")
+            @DefaultValue("20")
+                    Integer limit
+    );
 
 
 

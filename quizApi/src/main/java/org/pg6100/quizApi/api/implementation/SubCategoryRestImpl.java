@@ -3,16 +3,14 @@ package org.pg6100.quizApi.api.implementation;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import org.pg6100.quiz.ejb.CategoryEJB;
+import org.pg6100.quiz.entity.SubCategory;
 import org.pg6100.quizApi.api.SubCategoryRestApi;
-import org.pg6100.quizApi.dto.SubCategoryDto;
-import org.pg6100.quizApi.dto.SubSubCategoryDto;
+import org.pg6100.quizApi.dto.*;
 import org.pg6100.quizApi.dto.converter.SubCategoryConverter;
 import org.pg6100.quizApi.dto.converter.SubSubCategoryConverter;
-import org.pg6100.quizApi.api.SubCategoryRestApi;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.SubSubCategoryDto;
-import org.pg6100.quizApi.dto.converter.SubCategoryConverter;
-import org.pg6100.quizApi.dto.converter.SubSubCategoryConverter;
+import org.pg6100.quizApi.dto.hal.HalLink;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,8 +18,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 @Stateless
@@ -31,9 +31,47 @@ public class SubCategoryRestImpl implements SubCategoryRestApi {
     @EJB
     private CategoryEJB categoryEJB;
 
+    @Context
+    UriInfo uriInfo;
+
     @Override
-    public List<SubCategoryDto> getAllSubCategories() {
-        return SubCategoryConverter.transform(categoryEJB.getAllSubCategories());
+    public ListDto<SubCategoryDto> getAllSubCategories(Integer offset, Integer limit) {
+        if(offset < 0)
+            throw new WebApplicationException("Negative offset: "+offset, 400);
+        if(limit < 1)
+            throw new WebApplicationException("Limit should be at least 1: "+limit, 400);
+
+        int maxFromDb = 50;
+        List<SubCategory> subCategories = categoryEJB.getAllSubCategories(maxFromDb);
+        if(offset != 0 && offset >=  subCategories.size()){
+            throw new WebApplicationException("Offset "+ offset + " out of bound " + subCategories.size(), 400);
+        }
+
+        ListDto<SubCategoryDto> dto = SubCategoryConverter.transform(subCategories, offset, limit);
+
+        UriBuilder builder = uriInfo.getBaseUriBuilder()
+                .path("/subcategories")
+                .queryParam("limit", limit);
+
+        dto._links.self = new HalLink(builder.clone()
+                .queryParam("offset", offset)
+                .build().toString()
+        );
+
+        if (!subCategories.isEmpty() && offset > 0) {
+            dto._links.previous = new HalLink(builder.clone()
+                    .queryParam("offset", Math.max(offset - limit, 0))
+                    .build().toString()
+            );
+        }
+        if (offset + limit < subCategories.size()) {
+            dto._links.next = new HalLink(builder.clone()
+                    .queryParam("offset", offset + limit)
+                    .build().toString()
+            );
+        }
+
+        return dto;
     }
 
     @Override
@@ -46,8 +84,6 @@ public class SubCategoryRestImpl implements SubCategoryRestApi {
 
         Long id;
         try{
-            System.out.println(Long.valueOf(dto.category.id) + " ID");
-            System.out.println(dto.name + " NAME");
             id = categoryEJB.createNewSubCategory(dto.name, Long.valueOf(dto.category.id));
         }catch (Exception e){
             throw wrapException(e);

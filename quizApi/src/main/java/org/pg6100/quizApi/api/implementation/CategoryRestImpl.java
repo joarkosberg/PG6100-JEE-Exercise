@@ -2,7 +2,6 @@ package org.pg6100.quizApi.api.implementation;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import io.swagger.annotations.ApiParam;
 import org.pg6100.quiz.ejb.CategoryEJB;
 import org.pg6100.quiz.entity.Category;
 import org.pg6100.quizApi.dto.ListDto;
@@ -11,7 +10,6 @@ import org.pg6100.quizApi.api.CategoryRestApi;
 import org.pg6100.quizApi.dto.SubCategoryDto;
 import org.pg6100.quizApi.dto.converter.CategoryConverter;
 import org.pg6100.quizApi.dto.CategoryDto;
-import org.pg6100.quizApi.dto.converter.SubCategoryConverter;
 import org.pg6100.quizApi.dto.hal.HalLink;
 
 import javax.ejb.EJB;
@@ -19,7 +17,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.validation.ConstraintViolationException;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -45,7 +42,6 @@ public class CategoryRestImpl implements CategoryRestApi {
             throw new WebApplicationException("Limit should be at least 1: "+limit, 400);
 
         int maxFromDb = 50;
-
         List<Category> categories = categoryEJB.getCategories(withQuizzes, expand, maxFromDb);
         if(offset != 0 && offset >=  categories.size()){
             throw new WebApplicationException("Offset "+ offset + " out of bound " + categories.size(), 400);

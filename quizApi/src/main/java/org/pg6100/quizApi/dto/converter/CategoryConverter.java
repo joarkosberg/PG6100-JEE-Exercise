@@ -20,7 +20,6 @@ public class CategoryConverter {
         CategoryDto dto = new CategoryDto();
         dto.id = String.valueOf(entity.getId());
         dto.name = entity.getName();
-
         return dto;
     }
 
@@ -47,7 +46,7 @@ public class CategoryConverter {
             dtoList = entities.stream()
                     .skip(offset)
                     .limit(limit)
-                    .map(n -> transform(n, expand))
+                    .map(c -> transform(c, expand))
                     .collect(Collectors.toList());
         }
 

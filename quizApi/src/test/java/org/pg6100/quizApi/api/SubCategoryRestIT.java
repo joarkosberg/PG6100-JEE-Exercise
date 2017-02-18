@@ -22,7 +22,7 @@ public class SubCategoryRestIT extends TestBase {
 
     @Test
     public void testCreateAndGetSubCategory() {
-        get().then().statusCode(200).body("size()", is(0));
+        get().then().statusCode(200).body("list.size()", is(0));
 
         CategoryDto categoryDto = new CategoryDto(null, "cat", null);
         categoryDto.id = createCategory(categoryDto);
@@ -34,7 +34,7 @@ public class SubCategoryRestIT extends TestBase {
                 .statusCode(200)
                 .extract();
 
-        get().then().statusCode(200).body("size()", is(1));
+        get().then().statusCode(200).body("list.size()", is(1));
     }
 
     @Test

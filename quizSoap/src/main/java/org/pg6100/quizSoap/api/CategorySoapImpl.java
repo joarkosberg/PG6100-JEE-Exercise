@@ -53,7 +53,6 @@ public class CategorySoapImpl implements CategorySoapApi{
         categoryEJB.updateCategory(id, name);
     }
 
-
     public boolean deleteCategory(Long id) {
         if (!categoryEJB.isCategoryPresent(id)) {
             return false;
